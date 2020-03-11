@@ -1,5 +1,5 @@
-const noteRoutes = require('./tasks_routes');
+const newsRoutes = require('./tasks_routes');
+
 module.exports = function (app, db) {
-    noteRoutes(app, db);
-    //TODO another routes
+   newsRoutes(app, db);
 };
