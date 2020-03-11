@@ -1,4 +1,4 @@
-const newsRoutes = require('./tasks_routes');
+const newsRoutes = require('./news_routes');
 
 module.exports = function (app, db) {
    newsRoutes(app, db);
