@@ -50,7 +50,8 @@ module.exports = function (app, db) {
     });
 
     app.post(newsURL, (req, res) => {
-        const news = {content: req.body.content, title: req.body.title, likes: 0};
+        let news1 = JSON.parse(Object.keys(req.body)[0]);
+        const news = {content: news1.content, title: news1.title, likes:0};
         db.collection(collectionName).insertOne(news, (err, result) => {
             if (err) {
                 res.send({'error': 'An error has occurred'});

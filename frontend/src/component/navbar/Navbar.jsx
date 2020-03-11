@@ -6,15 +6,27 @@ import {Routes} from "../../constant/Routes";
 
 import {withRouter} from 'react-router-dom';
 import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 
 class Navbar extends React.Component {
+    create = () => {
+        this.props.history.push(Routes.newsCreate);
+    };
+
+    news = () => {
+        this.props.history.push(Routes.news);
+    };
+
     render() {
         return (
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" >
+                    <Button onClick={this.news}>
                         News
-                    </Typography>
+                    </Button>
+                    <Button onClick={this.create}>
+                        Create news
+                    </Button>
                 </Toolbar>
             </AppBar>)
 
