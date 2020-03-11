@@ -36,13 +36,15 @@ module.exports = function (app, db) {
             return;
         }
         const details = {'_id': new ObjectID(id)};
-        const news = {content: req.body.content, title: req.body.title, likes: req.body.likes};
+        console.log(req.body);
+        let news1 = JSON.parse(Object.keys(req.body)[0]);
+        const news = {content: news1.content, title: news1.title, likes:news1.likes};
         db.collection(collectionName).updateOne(details,{$set: news } , (err, result) => {
             if (err) {
                 console.log(err)
                 res.status(400).send({'error': 'An error has occurred'});
             } else {
-                res.sendStatus(200)
+                res.status(200).send(news);
             }
         });
     });
