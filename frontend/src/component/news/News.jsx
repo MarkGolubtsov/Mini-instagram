@@ -26,7 +26,6 @@ export default class News extends React.Component {
     like = () => {
         let news = this.props.news;
         news.likes++;
-        console.log(news);
         Axios.put(endpoints.putNews(this.props.news['_id']),JSON.stringify(news)).then(response => {
             let news = this.state.news;
             news.likes = response.data.likes;

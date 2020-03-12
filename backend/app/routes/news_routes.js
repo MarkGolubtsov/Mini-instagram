@@ -36,7 +36,6 @@ module.exports = function (app, db) {
             return;
         }
         const details = {'_id': new ObjectID(id)};
-        console.log(req.body);
         let news1 = JSON.parse(Object.keys(req.body)[0]);
         const news = {content: news1.content, title: news1.title, likes:news1.likes};
         db.collection(collectionName).updateOne(details,{$set: news } , (err, result) => {

@@ -4,12 +4,13 @@ import {endpoints} from "../../constant/endpoints";
 import axios from 'axios';
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 export default class NewsList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {news: []};
+        this.state = {news: [], loading: false};
     }
 
     deleteOneNews = (element) => {
@@ -19,11 +20,11 @@ export default class NewsList extends React.Component {
     };
 
     componentDidMount() {
+        this.setState({loading: true});
         axios.get(endpoints.getNewsList)
             .then((response) => {
-                console.log(response.data);
                 const news = response.data;
-                this.setState({news});
+                this.setState({loading: false, news});
             })
             .catch(function (error) {
                 console.log(error);
@@ -34,6 +35,9 @@ export default class NewsList extends React.Component {
         let news = this.state.news.map((news) => {
             return <News deleteOne={this.deleteOneNews} key={news['_id']} news={news}/>
         });
+        if (this.state.loading) {
+            news = <CircularProgress/>
+        }
         return (
             <React.Fragment>
                 <Container maxWidth="sm">
