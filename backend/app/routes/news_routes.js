@@ -4,7 +4,9 @@ let ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (app, db) {
     app.get(newsURL, (req, res) => {
-        db.collection(collectionName).find().toArray((err, result) => {
+        let sort = req.query.sort;
+        let order = req.query.order;
+        db.collection(collectionName).find().sort({[sort]: Number(order)}).toArray((err, result) => {
             res.send(result);
         });
     });
@@ -30,6 +32,7 @@ module.exports = function (app, db) {
     });
 
     app.put(newsURL + '/:id', (req, res) => {
+        console.log(req.query);
         const id = req.params.id;
         if (!ObjectID.isValid(id)) {
             res.status(404).send({'error': 'Not Found'});
@@ -37,8 +40,8 @@ module.exports = function (app, db) {
         }
         const details = {'_id': new ObjectID(id)};
         let news1 = JSON.parse(Object.keys(req.body)[0]);
-        const news = {content: news1.content, title: news1.title, likes:news1.likes};
-        db.collection(collectionName).updateOne(details,{$set: news } , (err, result) => {
+        const news = {content: news1.content, title: news1.title, likes: news1.likes};
+        db.collection(collectionName).updateOne(details, {$set: news}, (err, result) => {
             if (err) {
                 console.log(err)
                 res.status(400).send({'error': 'An error has occurred'});
@@ -50,7 +53,7 @@ module.exports = function (app, db) {
 
     app.post(newsURL, (req, res) => {
         let news1 = JSON.parse(Object.keys(req.body)[0]);
-        const news = {content: news1.content, title: news1.title, likes:0};
+        const news = {content: news1.content, title: news1.title, likes: 0};
         db.collection(collectionName).insertOne(news, (err, result) => {
             if (err) {
                 res.send({'error': 'An error has occurred'});

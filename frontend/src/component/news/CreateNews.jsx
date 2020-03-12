@@ -57,4 +57,5 @@ class CreateNews extends React.Component {
         )
     }
 }
+
 export default withRouter(CreateNews);
