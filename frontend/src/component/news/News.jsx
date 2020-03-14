@@ -24,11 +24,13 @@ export default class News extends React.Component {
     };
 
     like = () => {
+        console.log('like')
         let news = this.props.news;
         news.likes++;
         RestRequest.put(endpoints.putNews(this.props.news['_id']), {}, news).then(response => {
+            console.log(response)
             let news = this.state.news;
-            news.likes = response.data.likes;
+            news.likes = response.data.payload.likes;
             this.setState(news);
         });
     };

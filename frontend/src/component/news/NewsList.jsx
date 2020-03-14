@@ -30,7 +30,7 @@ export default class NewsList extends React.Component {
         this.setState({loading: true});
         RestRequest.get(endpoints.getNewsList + `?sort=likes&order=${order ? 1 : -1}`)
             .then((response) => {
-                const news = response.data;
+                const news = response.data.payload;
                 this.setState({loading: false, news, order});
             })
             .catch(function (error) {
