@@ -7,6 +7,7 @@ const app = express();
 const port = 8090;
 const dbName = 'SPP2';
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(cors());
 const mongoClient = new MongoClient(db.url, {useNewUrlParser: true});
 mongoClient.connect((err, database) => {

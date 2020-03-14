@@ -1,20 +1,19 @@
 import * as React from "react";
 import News from "./News";
 import {endpoints} from "../../constant/endpoints";
-import axios from 'axios';
 import Container from "@material-ui/core/Container";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import {RestRequest} from "../../service/requestService";
 
 
 export default class NewsList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {news: [], loading: false, order: false};
+        this.state = {news: [], loading: false, order: true};
     }
 
     deleteOneNews = (element) => {
@@ -24,23 +23,22 @@ export default class NewsList extends React.Component {
     };
 
     componentDidMount() {
-        this.load();
+        this.load(this.state.order);
     }
 
-    load = () => {
+    load = (order) => {
         this.setState({loading: true});
-        axios.get(endpoints.getNewsList + `?sort=likes&order=${this.state.order ? 1 : -1}`)
+        RestRequest.get(endpoints.getNewsList + `?sort=likes&order=${order ? 1 : -1}`)
             .then((response) => {
                 const news = response.data;
-                this.setState({loading: false, news});
+                this.setState({loading: false, news, order});
             })
             .catch(function (error) {
                 console.log(error);
             })
     };
     topLike = () => {
-        this.state.order=!this.state.order;
-        this.load();
+        this.load(!this.state.order);
     };
 
     render() {
@@ -52,11 +50,11 @@ export default class NewsList extends React.Component {
             <React.Fragment>
                 <Container maxWidth="sm">
                     <IconButton onClick={this.topLike}>
-                        {this.state.order ? <FavoriteBorderIcon/>:<FavoriteIcon/> }
+                        {this.state.order ? <FavoriteBorderIcon/> : <FavoriteIcon/>}
                     </IconButton>
                     <Box>
                         <Container>
-                            {loading ?<LinearProgress /> : news}
+                            {loading ? <LinearProgress/> : news}
                         </Container>
                     </Box>
                 </Container>

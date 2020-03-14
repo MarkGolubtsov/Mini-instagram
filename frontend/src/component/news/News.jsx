@@ -8,8 +8,8 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import Axios from "axios";
 import {endpoints} from "../../constant/endpoints";
+import {RestRequest} from "../../service/requestService";
 
 export default class News extends React.Component {
     constructor(props) {
@@ -18,15 +18,15 @@ export default class News extends React.Component {
     }
 
     delete = () => {
-        Axios.delete(endpoints.deleteNews(this.props.news['_id'])).then((response) => {
+        RestRequest.delete(endpoints.deleteNews(this.props.news['_id'])).then((response) => {
             this.props.deleteOne(this.props.news);
-        })
+        });
     };
 
     like = () => {
         let news = this.props.news;
         news.likes++;
-        Axios.put(endpoints.putNews(this.props.news['_id']), JSON.stringify(news)).then(response => {
+        RestRequest.put(endpoints.putNews(this.props.news['_id']), {}, news).then(response => {
             let news = this.state.news;
             news.likes = response.data.likes;
             this.setState(news);

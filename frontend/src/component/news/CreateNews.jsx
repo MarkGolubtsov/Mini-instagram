@@ -6,18 +6,18 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import {endpoints} from "../../constant/endpoints";
-import axios from "axios";
 import {withRouter} from 'react-router-dom';
 import {Routes} from "../../constant/Routes";
+import {RestRequest} from "../../service/requestService";
 
 class CreateNews extends React.Component {
 
     onSubmit = event => {
         event.preventDefault();
-        console.log(event.target.elements);
-         const title = event.target.elements[0].value;
-         const content = event.target.elements[1].value;
-            axios.post(endpoints.postNews,JSON.stringify({title,content})).then((response) =>{
+        const title = event.target.elements[0].value;
+        const content = event.target.elements[1].value;
+        RestRequest.post(endpoints.postNews, {}, {title, content})
+            .then((response) => {
                 this.props.history.push(Routes.news);
             })
     };

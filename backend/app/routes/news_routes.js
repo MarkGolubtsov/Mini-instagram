@@ -32,15 +32,15 @@ module.exports = function (app, db) {
     });
 
     app.put(newsURL + '/:id', (req, res) => {
-        console.log(req.query);
         const id = req.params.id;
         if (!ObjectID.isValid(id)) {
             res.status(404).send({'error': 'Not Found'});
             return;
         }
         const details = {'_id': new ObjectID(id)};
-        let news1 = JSON.parse(Object.keys(req.body)[0]);
-        const news = {content: news1.content, title: news1.title, likes: news1.likes};
+        const news = {content: req.body.content, title: req.body.title, likes: req.body.likes};
+        console.log(news);
+        console.log(req.body);
         db.collection(collectionName).updateOne(details, {$set: news}, (err, result) => {
             if (err) {
                 console.log(err)
@@ -52,8 +52,7 @@ module.exports = function (app, db) {
     });
 
     app.post(newsURL, (req, res) => {
-        let news1 = JSON.parse(Object.keys(req.body)[0]);
-        const news = {content: news1.content, title: news1.title, likes: 0};
+        const news = {content: req.body.content, title: req.body.title, likes: 0};
         db.collection(collectionName).insertOne(news, (err, result) => {
             if (err) {
                 res.send({'error': 'An error has occurred'});
