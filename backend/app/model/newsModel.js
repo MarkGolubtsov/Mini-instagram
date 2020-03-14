@@ -1,4 +1,5 @@
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+
 let newsSchema = mongoose.Schema({
     title : {
         type: String,
@@ -14,4 +15,4 @@ let newsSchema = mongoose.Schema({
     }
 },{versionKey:false});
 
-let News = module.exports = mongoose.model('news', newsSchema);
+ module.exports = mongoose.model('news', newsSchema);

@@ -1,5 +1,5 @@
-News = require('../model/newsModel');
-let ObjectId = require('mongoose').Types.ObjectId;
+const News = require('../model/newsModel');
+const  ObjectId = require('mongoose').Types.ObjectId;
 
 exports.getAllNews = (request, response) => {
     News.find().sort({[request.query.sort]:request.query.order}).exec((err, news) => {
