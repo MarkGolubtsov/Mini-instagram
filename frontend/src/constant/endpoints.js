@@ -5,4 +5,7 @@ export const endpoints = {
     deleteNews: id => `${apiUrl}/news/${id}`,
     postNews: `${apiUrl}/news`,
     getNewsList: `${apiUrl}/news`,
+
+    login:`${apiUrl}/login`,
+    registration:`${apiUrl}/registration`
 };
