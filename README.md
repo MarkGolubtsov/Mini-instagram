@@ -1,1 +1,1 @@
-CRUD operation. Rest API
+Rest API. frontend:React.js, backend:React.js.
