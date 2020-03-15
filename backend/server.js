@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const db = require('./app/config/db');
-
+const auth = require('./app/auth');
 
 const port = 8090;
 const app = express();
@@ -20,8 +20,11 @@ mongoose.connect(db.url, {
 let database = mongoose.connection;
 database ? console.log("Db connected successfully") : console.log("Error connecting db");
 
-let apiRoutes = require('./app/api-routes');
-app.use('/', apiRoutes);
+let privateApiRoutes = require('./app/route/private-api-routes');
+let publicApiRoutes = require('./app/route/public-api-routes');
+app.use('/', publicApiRoutes);
+app.use(auth.isAuthorized);
+app.use('/', privateApiRoutes);
 app.listen(port, () => {
     console.log("Running RestHub on port " + port);
 });

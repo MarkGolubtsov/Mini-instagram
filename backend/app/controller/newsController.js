@@ -52,16 +52,13 @@ exports.getById = (request, response) => {
 exports.update = (request, response) => {
     let id = request.params.news_id;
     if (!ObjectId.isValid(id)) {
-        console.log('sdf');
         response.status(400).send({
             message: 'Bad id.'
         });
         return;
     }
-    console.log('update');
     News.findById(id,(err, news) => {
         if (err) {
-            console.log(err);
             response.send(err);
         }
         news.name = request.body.title ? request.body.name : news.name;
@@ -71,7 +68,6 @@ exports.update = (request, response) => {
             if (err) {
                 response.status(400).send(err);
             }
-            console.log(news);
             response.status(200).send({
                 message: 'News Info updated',
                 payload: news

@@ -26,16 +26,17 @@ exports.registration = (request, response) => {
 
 exports.login = (request, response) => {
     User.findOne({email: request.body.email, password: request.body.password}, (err, user) => {
+        if (!user) {
+            response.status(404).send({
+                message: 'User not found.'
+            });
+            return;
+        }
         if (err) {
             response.send(err);
             return;
         }
-        if (!user) {
-            response.status(404).send({
-                message:'User not found.'
-            });
-            return;
-        }
+
         response.status(200).send({
             token: generationToken(user)
         })
