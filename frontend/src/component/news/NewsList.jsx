@@ -8,9 +8,11 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {RestRequest} from "../../service/requestService";
+import {Routes} from "../../constant/Routes";
+import {withRouter} from "react-router-dom";
 
 
-export default class NewsList extends React.Component {
+class NewsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {news: [], loading: false, order: true};
@@ -32,10 +34,9 @@ export default class NewsList extends React.Component {
             .then((response) => {
                 const news = response.data.payload;
                 this.setState({loading: false, news, order});
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+            }).catch(reason => {
+            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
+        });
     };
     topLike = () => {
         this.load(!this.state.order);
@@ -62,3 +63,5 @@ export default class NewsList extends React.Component {
     }
 
 }
+
+export default withRouter(NewsList)

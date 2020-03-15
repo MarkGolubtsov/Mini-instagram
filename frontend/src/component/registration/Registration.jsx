@@ -6,16 +6,38 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {Link, withRouter} from 'react-router-dom';
 import {Routes} from '../../constant/Routes';
+import {AuthContext} from "../AuthProvider";
+import Alert from "../alert/Alert";
 
 class Registration extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {error: null}
+    }
+
+    registration = (event) => {
+        event.preventDefault();
+
+        const name = event.target.elements[0].value;
+        const surname = event.target.elements[2].value;
+        const email = event.target.elements[4].value;
+        const password = event.target.elements[6].value;
+        let resultPromise = this.context.registration(name,surname,email,password);
+        resultPromise.then(() => {
+            this.props.history.push(Routes.news);
+        }).catch(reason => {
+            this.setState({error: reason.response.data.message})
+        });
+    };
     render() {
         return (
             <Container component="main" maxWidth="xs">
+                {this.state.error ? <Alert severity="error">{this.state.error}</Alert> : <></>}
                 <div>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <form noValidate>
+                    <form noValidate onSubmit={this.registration}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -86,5 +108,5 @@ class Registration extends React.Component {
     }
 
 }
-
+Registration.contextType = AuthContext;
 export default withRouter(Registration)

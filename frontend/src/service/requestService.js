@@ -8,7 +8,7 @@ const method = {
 };
 
 const sendRequest = (method, url, data) => {
-    const Authorization = localStorage.getItem('Authorization');
+    const Authorization = localStorage.getItem('Jwt token');
     const headers = {Authorization};
     return Axios.request({method, url, data, headers});
 };

@@ -36,6 +36,7 @@
     ]
   },
   "devDependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.45",
     "react-router-dom": "^5.1.2"
   }
 }

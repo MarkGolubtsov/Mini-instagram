@@ -10,8 +10,11 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import {endpoints} from "../../constant/endpoints";
 import {RestRequest} from "../../service/requestService";
+import {AuthContext} from "../AuthProvider";
+import {withRouter} from "react-router-dom";
+import {Routes} from "../../constant/Routes";
 
-export default class News extends React.Component {
+class News extends React.Component {
     constructor(props) {
         super(props);
         this.state = {news: props.news};
@@ -20,19 +23,24 @@ export default class News extends React.Component {
     delete = () => {
         RestRequest.delete(endpoints.deleteNews(this.props.news['_id'])).then((response) => {
             this.props.deleteOne(this.props.news);
+        }).catch(reason => {
+            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
         });
     };
 
     like = () => {
-        console.log('like')
-        let news = this.props.news;
-        news.likes++;
-        RestRequest.put(endpoints.putNews(this.props.news['_id']), {}, news).then(response => {
-            console.log(response)
-            let news = this.state.news;
-            news.likes = response.data.payload.likes;
-            this.setState(news);
-        });
+        if (this.context.currentUser) {
+            let news = this.props.news;
+            news.likes++;
+            RestRequest.put(endpoints.putNews(this.props.news['_id']), {}, news).then(response => {
+                let news = this.state.news;
+                news.likes = response.data.payload.likes;
+                this.setState(news);
+            }).catch(reason => {
+                if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
+            });
+        }
+
     };
 
     render() {
@@ -52,10 +60,16 @@ export default class News extends React.Component {
                         <Typography>
                             {this.props.news.likes}
                         </Typography>
+                        {
+                            this.context.currentUser
+                                ?
+                                <Button onClick={this.delete} variant='contained' color='secondary'>
+                                    Delete
+                                </Button>
+                                :
+                                <></>
+                        }
 
-                        <Button onClick={this.delete} variant='contained' color='secondary'>
-                            Delete
-                        </Button>
                     </CardActions>
                 </Card>
             </Box>
@@ -64,3 +78,6 @@ export default class News extends React.Component {
 
     }
 }
+
+News.contextType = AuthContext;
+export default withRouter(News);

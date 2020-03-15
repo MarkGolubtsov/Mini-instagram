@@ -3,11 +3,12 @@ import {RestRequest} from "./requestService";
 import {endpoints} from "../constant/endpoints";
 
 const getUserFromStorage = () => {
-    let token = localStorage.getItem('token');
+    let token = localStorage.getItem('Jwt token');
+    if (!token) return null;
     let data = jwt_decode(token);
     let user = {
         name: data.name,
-        secondname: data.second.name,
+        surname: data.surname,
         email: data.email
     };
     return user;
@@ -15,23 +16,22 @@ const getUserFromStorage = () => {
 
 const afterLogin = response => {
     if (response.data.token) {
-        localStorage.setItem('token', `${response.data.token}`);
+        localStorage.setItem('Jwt token', `${response.data.token}`);
     }
     return response;
 };
-const registration = (username, email, password) =>
-    RestRequest.post(endpoints.registration, {}, {username, email, password})
+const registration = (name, surname, email, password) =>
+    RestRequest.post(endpoints.registration, {}, {name, surname, email, password})
         .then(afterLogin);
 
-const login = (username, password) =>
-    RestRequest.post(endpoints.login, {}, {username, password})
+const login = (email, password) =>
+    RestRequest.post(endpoints.login, {}, {email, password})
         .then(afterLogin);
 
 const logout = () => {
-    localStorage.removeItem('Authorization');
-    localStorage.removeItem('User');
+    localStorage.removeItem('Jwt token');
 };
-export {
+export default {
     login,
     getUserFromStorage,
     registration,

@@ -7,18 +7,38 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {Link, withRouter} from 'react-router-dom';
 import {Routes} from '../../constant/Routes';
+import {AuthContext} from "../AuthProvider";
+import Alert from "../alert/Alert";
+
 
 class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {error: null}
+    }
+
+    login = (event) => {
+        event.preventDefault();
+        const email = event.target.elements[0].value;
+        const password = event.target.elements[2].value;
+        let resultPromise = this.context.login(email, password);
+        resultPromise.then(() => {
+            this.props.history.push(Routes.news);
+        }).catch(reason => {
+            this.setState({error: reason.response.data.message})
+        });
+    };
 
     render() {
         return (
             <Container component='main' maxWidth='xs'>
-                <CssBaseline />
-                <div className>
+                <CssBaseline/>
+                {this.state.error ? <Alert severity="error">{this.state.error}</Alert> : <></>}
+                <div>
                     <Typography component='h1' variant='h5'>
                         Sign in
                     </Typography>
-                    <form noValidate>
+                    <form noValidate onSubmit={this.login}>
                         <TextField
                             variant='outlined'
                             margin='normal'
@@ -51,7 +71,7 @@ class Login extends React.Component {
                         </Button>
                         <Grid container>
                             <Grid item>
-                                <Link  to={Routes.registration} variant='body2'>
+                                <Link to={Routes.registration} variant='body2'>
                                     Don't have an account? Sign Up
                                 </Link>
                             </Grid>
@@ -62,4 +82,6 @@ class Login extends React.Component {
         )
     }
 }
+
+Login.contextType = AuthContext;
 export default withRouter(Login)

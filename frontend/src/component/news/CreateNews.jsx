@@ -19,7 +19,9 @@ class CreateNews extends React.Component {
         RestRequest.post(endpoints.postNews, {}, {title, content})
             .then((response) => {
                 this.props.history.push(Routes.news);
-            })
+            }).catch(reason => {
+            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
+        });
     };
 
     render() {
