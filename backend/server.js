@@ -17,11 +17,11 @@ mongoose.connect(db.url, {
     useFindAndModify: false,
     useCreateIndex: true
 });
-let database = mongoose.connection;
+const database = mongoose.connection;
 database ? console.log("Db connected successfully") : console.log("Error connecting db");
 
-let privateApiRoutes = require('./app/route/private-api-routes');
-let publicApiRoutes = require('./app/route/public-api-routes');
+const privateApiRoutes = require('./app/route/private-api-routes');
+const publicApiRoutes = require('./app/route/public-api-routes');
 app.use('/', publicApiRoutes);
 app.use(auth.isAuthorized);
 app.use('/', privateApiRoutes);
