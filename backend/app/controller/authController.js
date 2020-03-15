@@ -1,13 +1,14 @@
 const User = require('../model/userModel');
 const jwt = require('jsonwebtoken');
 const auth = require('../config/auth');
+const  md5 = require('md5');
 
 exports.registration = (request, response) => {
     let user = new User();
     user.name = request.body.name;
     user.surname = request.body.surname;
     user.email = request.body.email;
-    user.password = request.body.password;
+    user.password = getHashPassword(request.body.password);
     user.save((err) => {
         if (err) {
             if (err.code === 11000) {
@@ -25,7 +26,7 @@ exports.registration = (request, response) => {
 };
 
 exports.login = (request, response) => {
-    User.findOne({email: request.body.email, password: request.body.password}, (err, user) => {
+    User.findOne({email: request.body.email, password: getHashPassword(request.body.password, crypt.round)}, (err, user) => {
         if (!user) {
             response.status(404).send({
                 message: 'User not found.'
@@ -48,4 +49,8 @@ let generationToken = (user) => {
         email: user.email,
         surname: user.surname
     }, auth.secretKey, {expiresIn: auth.expires});
+};
+
+let getHashPassword = (password) => {
+    return md5(password);
 };

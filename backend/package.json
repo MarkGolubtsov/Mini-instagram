@@ -18,6 +18,7 @@
   "devDependencies": {
     "bcrypt": "^4.0.1",
     "jsonwebtoken": "^8.5.1",
+    "md5": "^2.2.1",
     "mongoose": "^5.9.4"
   }
 }
