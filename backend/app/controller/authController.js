@@ -12,7 +12,7 @@ exports.registration = (request, response) => {
     user.save((err) => {
         if (err) {
             if (err.code === 11000) {
-                response.status(409).send({message: `${user.email} is exist.`});
+                response.status(409).send({message: 'Account already exists.'});
                 return;
             }
             response.status(400).send(err);
@@ -26,7 +26,7 @@ exports.registration = (request, response) => {
 };
 
 exports.login = (request, response) => {
-    User.findOne({email: request.body.email, password: getHashPassword(request.body.password, crypt.round)}, (err, user) => {
+    User.findOne({email: request.body.email, password: getHashPassword(request.body.password)}, (err, user) => {
         if (!user) {
             response.status(404).send({
                 message: 'User not found.'
