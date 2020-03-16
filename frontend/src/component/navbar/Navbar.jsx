@@ -36,9 +36,9 @@ class Navbar extends React.Component {
                                 <ExitToApp color='secondary'>
                                 </ExitToApp>
                             </IconButton>
-                        <Typography>
-                            Hi,{this.context.currentUser.name}!
-                        </Typography>
+                            <Typography>
+                                Hi,{this.context.currentUser.name}!
+                            </Typography>
                         </>
                         :
                         <Link to={Routes.login}>

@@ -26,5 +26,5 @@ app.use('/', publicApiRoutes);
 app.use(auth.isAuthorized);
 app.use('/', privateApiRoutes);
 app.listen(port, () => {
-    console.log("Running RestHub on port " + port);
+    console.log("Running project  on port " + port);
 });
