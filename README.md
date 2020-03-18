@@ -1,1 +1,1 @@
-Rest API. frontend:React.js, backend:React.js.
+Rest API. frontend:React.js, backend:Node.js.
