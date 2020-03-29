@@ -8,11 +8,11 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import {endpoints} from "../../constant/endpoints";
-import {RestRequest} from "../../service/requestService";
+import {endpoints, endpointsClient, endpointsServer} from "../../constant/endpoints";
 import {AuthContext} from "../AuthProvider";
 import {withRouter} from "react-router-dom";
 import {Routes} from "../../constant/Routes";
+import {socket} from "../../service/requestService";
 
 class News extends React.Component {
     constructor(props) {
@@ -21,24 +21,19 @@ class News extends React.Component {
     }
 
     delete = () => {
-        RestRequest.delete(endpoints.deleteNews(this.props.news['_id'])).then((response) => {
-            this.props.deleteOne(this.props.news);
-        }).catch(reason => {
-            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
-        });
     };
 
     like = () => {
         if (this.context.currentUser) {
             let news = this.props.news;
             news.likes++;
-            RestRequest.put(endpoints.putNews(this.props.news['_id']), {}, news).then(response => {
-                let news = this.state.news;
-                news.likes = response.data.payload.likes;
+            socket.on(endpointsClient.updated, (data) => {
+                console.log(data);
+                if (data.status === 401 || data.status === 403) this.props.history.push(Routes.login);
+                news.likes = data.payload.likes;
                 this.setState(news);
-            }).catch(reason => {
-                if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
             });
+            socket.emit(endpointsServer.putNews,news);
         }
 
     };

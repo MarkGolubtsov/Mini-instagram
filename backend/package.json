@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "demon": "^1.4.4",
     "express": "^4.17.1",
     "mongodb": "^3.5.3",
     "socket.io": "^2.2.0"

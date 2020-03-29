@@ -1,29 +1,30 @@
 const News = require('../model/newsModel');
-const  ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require('mongoose').Types.ObjectId;
 
-exports.getAllNews = (request, response) => {
-    News.find().sort({[request.query.sort]:request.query.order}).exec((err, news) => {
+exports.getAllNews = (params,returnFunction) => {
+    News.find().sort({[params.sort]: params.order}).exec((err, news) => {
         if (err) {
-            response.json({
-                status: "error",
+            returnFunction( {
+                status: 400,
                 message: err,
             });
         }
-        response.json({
-            status: "success",
+        returnFunction({
+            status: 200,
             message: "News retrieved successfully",
             payload: news
         });
-    })
+    });
+
 };
 
-exports.new = (request, response) => {
+exports.new = (newsData,returnFunction) => {
     {
         let news = new News();
-        news.title = request.body.title;
-        news.content = request.body.content;
+        news.title = newsData.title;
+        news.content = newsData.content;
         news.save((err) => {
-            response.status(200).json({
+            returnFunction({
                 message: 'New news created!',
                 payload: news
             });
@@ -31,44 +32,38 @@ exports.new = (request, response) => {
     }
 };
 
-exports.getById = (request, response) => {
-    let id = request.params.news_id;
+exports.getById = (id,returnFunction) => {
     if (!ObjectId.isValid(id)) {
-        response.status(400).send({
-            message: 'Bad id.'
-        });
-        return;
+        returnFunction({status:400});
     }
     News.findById(id, (err, news) => {
-        if (err)
-            response.send(err);
-        response.status(200).send({
-            message: 'News details.',
+        if (err) {
+            returnFunction({
+                status:400,
+                payload:{err}
+            })
+        }
+        returnFunction({
+            status: 200,
             payload: news
         });
     });
 };
 
-exports.update = (request, response) => {
-    let id = request.params.news_id;
+exports.update = (newsForUpdate,returnFunction) => {
+    let id = newsForUpdate._id;
     if (!ObjectId.isValid(id)) {
-        response.status(400).send({
+        return {
             message: 'Bad id.'
-        });
-        return;
+        };
     }
-    News.findById(id,(err, news) => {
-        if (err) {
-            response.send(err);
-        }
-        news.name = request.body.title ? request.body.name : news.name;
-        news.content = request.body.content ? request.body.content : news.content;
-        news.likes = request.body.likes ? request.body.likes : news.likes;
+    News.findById(id, (err, news) => {
+        news.name = newsForUpdate.title ? newsForUpdate.name : news.name;
+        news.content = newsForUpdate.content ? newsForUpdate.content : news.content;
+        news.likes = newsForUpdate.likes ? newsForUpdate.likes : news.likes;
         news.save((err) => {
-            if (err) {
-                response.status(400).send(err);
-            }
-            response.status(200).send({
+            returnFunction( {
+                status:200,
                 message: 'News Info updated',
                 payload: news
             });
@@ -77,22 +72,22 @@ exports.update = (request, response) => {
 };
 
 
-exports.delete = function (request, response) {
-    let id = request.params.news_id;
+exports.delete = (news_id,returnFunction) => {
+    let id = news_id;
     if (!ObjectId.isValid(id)) {
-        response.status(400).send({
+        returnFunction ({
             message: 'Bad id.'
         });
-        return;
     }
     News.deleteOne({
         _id: id
     }, (err, news) => {
         if (err)
-            response.send(err);
-        response.status(204).send({
-            status: "success",
-            message: 'Contact deleted'
+            return (err);
+        returnFunction( {
+            status: 204,
+            message: 'Contact deleted',
+            payload:{}
         });
     });
 };

@@ -1,6 +1,6 @@
 import jwt_decode from "jwt-decode";
+import {authEndpoints} from "../constant/endpoints";
 import {RestRequest} from "./requestService";
-import {endpoints} from "../constant/endpoints";
 
 const getUserFromStorage = () => {
     let token = localStorage.getItem('Jwt token');
@@ -21,11 +21,11 @@ const afterLogin = response => {
     return response;
 };
 const registration = (name, surname, email, password) =>
-    RestRequest.post(endpoints.registration, {}, {name, surname, email, password})
+    RestRequest.post(authEndpoints.registration, {}, {name, surname, email, password})
         .then(afterLogin);
 
 const login = (email, password) =>
-    RestRequest.post(endpoints.login, {}, {email, password})
+    RestRequest.post(authEndpoints.login, {}, {email, password})
         .then(afterLogin);
 
 const logout = () => {

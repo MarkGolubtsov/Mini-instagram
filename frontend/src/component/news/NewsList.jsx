@@ -1,15 +1,14 @@
 import * as React from "react";
 import News from "./News";
-import {endpoints} from "../../constant/endpoints";
 import Container from "@material-ui/core/Container";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import {RestRequest} from "../../service/requestService";
-import {Routes} from "../../constant/Routes";
 import {withRouter} from "react-router-dom";
+import {socket} from "../../service/requestService";
+import {endpointsClient, endpointsServer} from "../../constant/endpoints";
 
 
 class NewsList extends React.Component {
@@ -30,13 +29,14 @@ class NewsList extends React.Component {
 
     load = (order) => {
         this.setState({loading: true});
-        RestRequest.get(endpoints.getNewsList + `?sort=likes&order=${order ? 1 : -1}`)
-            .then((response) => {
-                const news = response.data.payload;
-                this.setState({loading: false, news, order});
-            }).catch(reason => {
-            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
+        let params = {
+            sort: 'likes',
+            order: order ? 1 : -1
+        };
+        socket.on(endpointsClient.getAll, (data) => {
+            this.setState({order:order,news: data.payload, loading: false});
         });
+        socket.emit(endpointsServer.getNewsList, params);
     };
     topLike = () => {
         this.load(!this.state.order);
