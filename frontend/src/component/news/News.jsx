@@ -20,7 +20,7 @@ class News extends React.Component {
         this.state = {news: props.news};
     }
 
-    delete = () => {
+    delete = (id) => {
     };
 
     like = () => {
@@ -58,7 +58,7 @@ class News extends React.Component {
                         {
                             this.context.currentUser
                                 ?
-                                <Button onClick={this.delete} variant='contained' color='secondary'>
+                                <Button onClick={this.delete(this.props.news.id)} variant='contained' color='secondary'>
                                     Delete
                                 </Button>
                                 :

@@ -5,10 +5,10 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import {endpoints} from "../../constant/endpoints";
+import {endpointsClient, endpointsServer} from "../../constant/endpoints";
 import {withRouter} from 'react-router-dom';
+import {socket} from "../../service/requestService";
 import {Routes} from "../../constant/Routes";
-import {RestRequest} from "../../service/requestService";
 
 class CreateNews extends React.Component {
 
@@ -16,6 +16,10 @@ class CreateNews extends React.Component {
         event.preventDefault();
         const title = event.target.elements[0].value;
         const content = event.target.elements[1].value;
+        socket.on(endpointsClient.getNew,()=>{
+           this.props.history.push(Routes.news);
+        });
+        socket.emit(endpointsServer.postNews, {title, content});
         // RestRequest.post(endpoints.postNews, {}, {title, content})
         //     .then((response) => {
         //         this.props.history.push(Routes.news);

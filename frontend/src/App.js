@@ -8,8 +8,13 @@ import CreateNews from "./component/news/CreateNews";
 import Registration from "./component/registration/Registration";
 import {AuthContext} from "./component/AuthProvider";
 import Login from "./component/login/Login";
+import {socket} from "./service/requestService";
 
 class App extends React.Component {
+    componentWillUnmount() {
+        socket.close()
+    }
+
     render() {
         return (
             <div className="App">

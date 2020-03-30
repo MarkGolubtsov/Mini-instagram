@@ -6,5 +6,6 @@ module.exports = {
     getAll: 'get all news',
     sendAll: 'news',
     sendUpdatedNews: 'updated',
-    sendDeletedNews: 'deleted'
+    sendDeletedNews: 'news deleted',
+    sendNewNews: 'new news'
 };

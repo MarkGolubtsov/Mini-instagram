@@ -8,9 +8,11 @@ export const endpointsServer = {
 };
 export const endpointsClient = {
     updated:'updated',
-    getAll:'news'
+    getAll:'news',
+    getNew:'new news',
+    getDelete: 'news deleted'
 };
 export const authEndpoints = {
     login:`${apiUrl}/login`,
     registration:`${apiUrl}/registration`,
-}
+};
