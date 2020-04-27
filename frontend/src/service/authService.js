@@ -8,7 +8,6 @@ const getUserFromStorage = () => {
     let data = jwt_decode(token);
     let user = {
         name: data.name,
-        surname: data.surname,
         email: data.email
     };
     return user;
@@ -20,8 +19,8 @@ const afterLogin = response => {
     }
     return response;
 };
-const registration = (name, surname, email, password) =>
-    RestRequest.post(endpoints.registration, {}, {name, surname, email, password})
+const registration = (name,email, password) =>
+    RestRequest.post(endpoints.registration, {}, {name, email, password})
         .then(afterLogin);
 
 const login = (email, password) =>

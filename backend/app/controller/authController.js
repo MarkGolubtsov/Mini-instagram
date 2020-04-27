@@ -9,20 +9,23 @@ exports.registration = (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({err: err});
         } else {
-            login();
+            passport.authenticate('local')(req, res, () => {
+                const token = authenticate.generateToken({_id: req.user._id, name: req.user.name, email: req.user.email});
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({token: token, status: 'Successfully Logged In'});
+            });
         }
     });
 };
-const login = (req, res) => {
+
+exports.login = (req, res) => {
     passport.authenticate('local')(req, res, () => {
         const token = authenticate.generateToken({_id: req.user._id, name: req.user.name, email: req.user.email});
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json({token: token, status: 'Successfully Logged In'});
     });
-}
-exports.login = (req, res) => {
-    login(req, res);
 }
 
 
