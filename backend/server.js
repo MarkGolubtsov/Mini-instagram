@@ -19,8 +19,7 @@ app.listen(8090, () => {
 })
 app.use('/graphql', authenticate.verifyUser, graphqlHTTP({
     schema,
-    rootValue: resolver,
-    graphiql: true
+    rootValue: resolver
 }));
 const routes = require('./app/route/routes')
 app.use('/', routes);
