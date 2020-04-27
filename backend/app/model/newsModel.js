@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 let newsSchema = mongoose.Schema({
     title : {
         type: String,
         required: true
     },
-    content: {
+    body: {
         type: String,
         required: true
     },
-    likes:  {
-        type:Number,
-        default: 0
-    }
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 },{versionKey:false});
 
- module.exports = mongoose.model('news', newsSchema);
+ module.exports = mongoose.model('News', newsSchema);

@@ -1,30 +1,29 @@
 const express = require('express');
-const cors = require('cors');
-const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
-const db = require('./app/config/db');
-const auth = require('./app/auth');
-
-const port = 8090;
+const db = require('./app/config/db')
+const graphqlHTTP = require('express-graphql');
+const resolver = require('./app/resolver/resolver')
+const schema = require('./app/model/schema')
+const mongoose = require('mongoose');
+const passport = require('passport');
+const authenticate = require('./app/auth/authenticate');
+const User = require('./app/model/userModel');
+const cors = require("cors");
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({extended: false}))
+app.use(passport.initialize());
 app.use(cors());
 
-mongoose.connect(db.url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-});
-const database = mongoose.connection;
-database ? console.log("Db connected successfully") : console.log("Error connecting db");
-
-const privateApiRoutes = require('./app/route/private-api-routes');
-const publicApiRoutes = require('./app/route/public-api-routes');
-app.use('/', publicApiRoutes);
-app.use(auth.isAuthorized);
-app.use('/', privateApiRoutes);
-app.listen(port, () => {
-    console.log("Running RestHub on port " + port);
+app.listen(8090, () => {
+    console.log(`Server started on http://localhost:8090`);
+})
+app.use('/graphql', authenticate.verifyUser, graphqlHTTP({
+    schema,
+    rootValue: resolver,
+    graphiql: true
+}));
+const routes = require('./app/route/routes')
+app.use('/', routes);
+mongoose.connect(db.url, {'useCreateIndex': true, useNewUrlParser: true, useUnifiedTopology: true}, (err) => {
+    err ? console.log(err.message) : console.log('MongoDB Successfully Connected ...');
 });
