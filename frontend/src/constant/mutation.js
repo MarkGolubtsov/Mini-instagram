@@ -26,6 +26,9 @@ export const DELETE_NEWS = gql`
        id
        title
        body
+        owner {
+            id
+            }
        likes{
            id
        }
@@ -39,7 +42,10 @@ mutation CreateNews($title: String!,$body: String!) {
             id
             title
             body
-            likes{
+              owner {
+                id
+             }
+            likes {
                 id
             }
        

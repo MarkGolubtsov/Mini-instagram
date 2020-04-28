@@ -6,6 +6,9 @@ export const GET_NEWS = gql`
             id
             title
             body
+            owner {
+            id
+            }
             likes {
                 id
             }

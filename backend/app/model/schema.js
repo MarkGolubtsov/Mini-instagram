@@ -15,6 +15,7 @@ const schema = buildSchema(`
     type News {
     id: ID!
     title: String!
+    owner: User!
     body: String!
     likes: [User!]!
   }

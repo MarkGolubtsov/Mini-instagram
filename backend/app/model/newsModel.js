@@ -14,6 +14,10 @@ let newsSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+    owner: {
+        type:Schema.Types.ObjectId,
+        ref:'User'
+    }
 },{versionKey:false});
 
  module.exports = mongoose.model('News', newsSchema);

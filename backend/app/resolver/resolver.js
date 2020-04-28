@@ -1,20 +1,28 @@
 const News = require('../model/newsModel');
 const ObjectId = require('mongoose').Types.ObjectId;
+
+
+
 const resolver = {
     news: () => {
-        return News.find().populate('likes').then(news => news).catch(err => err);
+        return News.find().populate('likes owner').then(news => news).catch(err => err);
     },
-    createNews: (args) => {
-        return News.create(args).then(news => news).catch(err => err);
+    createNews: (args,context) => {
+        args.owner = context.user._id;
+         return  News.create(args).then(news => {
+            let bufNews = news;
+            bufNews.owner.id = context.user._id;
+            return bufNews
+        }).catch(err => err);
     },
-    updateNews: (args) => {
-        return News.findOneAndUpdate({_id: new ObjectId(args.newsId)}, args, {new: true}).populate('likes').catch(err => err)
+    updateNews: (args, context) => {
+        return News.findOneAndUpdate({_id: new ObjectId(args.newsId)}, args, {new: true}).populate('likes owner').catch(err => err)
     },
     deleteNews: (args) => {
-        return News.findOneAndDelete({_id: new ObjectId(args.newsId)}).populate('likes')
+        return News.findOneAndDelete({_id: new ObjectId(args.newsId)}).populate('likes owner')
     },
     addNewsLike: (args, context) => {
-        return News.findById(new ObjectId(args.newsId)).populate('likes').then(news => {
+        return News.findById(new ObjectId(args.newsId)).populate('likes owner').then(news => {
             if (news) {
                 let currentUserId = context.user._id;
                 let likeIndex = news.likes.findIndex(user => user['_id'].equals(currentUserId))

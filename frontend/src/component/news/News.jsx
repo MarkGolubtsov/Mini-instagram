@@ -78,9 +78,15 @@ const News = ({news}) => {
                     <Typography>
                         {news.likes.length}
                     </Typography>
-                    <Button onClick={remove} variant='contained' color='secondary'>
-                        Delete
-                    </Button>
+                    {
+                        authContext.currentUser.id === news.owner.id
+                            ?
+                            <Button onClick={remove} variant='contained' color='secondary'>
+                                Delete
+                            </Button>
+                            :<React.Fragment/>
+                    }
+
                 </CardActions>
             </Card>
         </Box>
