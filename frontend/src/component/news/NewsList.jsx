@@ -21,14 +21,13 @@ const NewsList = () => (
             return (
                 <React.Fragment>
                     <Container maxWidth="sm">
-                        <IconButton>
-                             {/*<FavoriteBorderIcon/> */}
-                             <FavoriteIcon/>
-                        </IconButton>
+                        <Box display="flex" justifyContent="center">
+                            <IconButton>
+                                <FavoriteIcon/>
+                            </IconButton>
+                        </Box>
                         <Box>
-                            <Container>
-                                {loading ? <LinearProgress/> : news}
-                            </Container>
+                            {loading ? <LinearProgress/> : news}
                         </Box>
                     </Container>
                 </React.Fragment>)
