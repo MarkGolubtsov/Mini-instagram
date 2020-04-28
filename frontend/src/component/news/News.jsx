@@ -12,30 +12,16 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import {withRouter} from "react-router-dom";
 import {useMutation} from '@apollo/react-hooks';
-import {LIKE} from "../../constant/mutation";
-import {GET_NEWS} from "../../constant/query";
+import {DIS_LIKE, LIKE} from "../../constant/mutation";
 import {AuthContext} from "../AuthProvider";
 
 const News = ({news}) => {
-    const [addLike] = useMutation(LIKE,
-        {
-            update(cache, {data: {addNewsLike}}) {
-                const {news} = cache.readQuery({query: GET_NEWS});
-                let newsWithUpdateLikes = [...news];
-                newsWithUpdateLikes.find(news => news.id === addNewsLike.id).likes = addNewsLike.likes;
-                cache.writeQuery({
-                    query: GET_NEWS,
-                    data: {news: newsWithUpdateLikes},
-                });
-            }
-        }
-    );
+    const [addLike] = useMutation(LIKE);
+    const [removeLike] = useMutation(DIS_LIKE);
     const authContext = useContext(AuthContext);
 
 
     let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
-    console.log(news.likes.findIndex(user => user.id === authContext.currentUser.id))
-    console.log(isNewsHasLikesFromCurrentUser)
 
     return (
         <Box m={1}>
@@ -49,7 +35,7 @@ const News = ({news}) => {
                 <CardActions>
                     {
                         isNewsHasLikesFromCurrentUser ?
-                            <IconButton onClick={() => alert('remove')} aria-label="Like">
+                            <IconButton onClick={() => removeLike({variables:{id:news.id}})} aria-label="Like">
                                 <FavoriteIcon/>
                             </IconButton>
                             :
