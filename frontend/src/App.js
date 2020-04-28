@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {BrowserRouter, Redirect, Switch} from 'react-router-dom';
 import Navbar from "./component/navbar/Navbar";
 import NewsList from "./component/news/NewsList";
@@ -11,8 +10,8 @@ import Login from "./component/login/Login";
 import {ApolloProvider} from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import {endpoints} from "./constant/endpoints";
-import {OnlyGuestRoute} from "./OnlyGuestRoute";
-import {PrivateRoute} from "./PrivateRoute";
+import {OnlyGuestRoute} from "./route/OnlyGuestRoute";
+import {PrivateRoute} from "./route/PrivateRoute";
 import {createHttpLink} from "apollo-link-http";
 import {setContext} from 'apollo-link-context';
 import {InMemoryCache} from 'apollo-cache-inmemory';

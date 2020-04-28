@@ -1,7 +1,7 @@
 import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
-import authServices from "../src/service/authService";
-import {Routes} from "./constant/Routes";
+import authServices from "../service/authService";
+import {Routes} from "../constant/Routes";
 
 export const PrivateRoute = ({component: Component, onlyForAdmin, ...rest}) => (<Route
     {...rest}

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -31,7 +30,7 @@ const CreateNews = (props) =>{
     const onSubmit = event => {
         event.preventDefault();
         const title = event.target.elements[0].value;
-        const body = event.target.elements[1].value;
+        const body = event.target.elements[2].value;
         createNews({variables:{
             title,body
             },update:updateCache}).then((res)=>props.history.push(Routes.news))
@@ -48,22 +47,24 @@ const CreateNews = (props) =>{
                     >
                         <Box m={4}>
                             <Grid item>
-                                <TextField id='title' label='title'/>
+                                <TextField  variant="outlined" id='title' label='title'/>
                             </Grid>
                         </Box>
                         <Box m={4}>
                             <Grid>
-                                <TextareaAutosize id='content' aria-label='empty textarea' placeholder='content'/>
+                                <TextField  label="body" variant="outlined" id="body"  multiline   rowsMax={5}/>
                             </Grid>
                         </Box>
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                        >
-                            Create
-                        </Button>
+                        <Box m={4} >
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                            >
+                                Save
+                            </Button>
+                        </Box>
                     </Grid>
                 </form>
             </Container>

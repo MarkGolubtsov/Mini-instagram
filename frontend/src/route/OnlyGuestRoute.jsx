@@ -1,6 +1,6 @@
 import {Redirect, Route} from "react-router-dom";
-import authServices from "../src/service/authService";
-import {Routes} from "./constant/Routes";
+import authServices from "../service/authService";
+import {Routes} from "../constant/Routes";
 import React from "react";
 
 export const OnlyGuestRoute = ({component: Component, ...rest}) => (
