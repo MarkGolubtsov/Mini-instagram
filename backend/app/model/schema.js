@@ -5,9 +5,9 @@ const schema = buildSchema(`
   news: [News!]!
  }
  type Mutation {
-  addNews(title: String!, body: String!): News!
+  createNews(title: String!, body: String!): News!
   updateNews(newsId: ID!, title: String, body: String): News!
-  deleteNews(newsId: ID!):News
+  deleteNews(newsId: String!):News
   addNewsLike(newsId: String!): News!
   deleteNewsLike(newsId: String!): News!
   }

@@ -4,7 +4,7 @@ const resolver = {
     news: () => {
         return News.find().populate('likes').then(news => news).catch(err => err);
     },
-    addNews: (args) => {
+    createNews: (args) => {
         return News.create(args).then(news => news).catch(err => err);
     },
     updateNews: (args) => {

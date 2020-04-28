@@ -12,14 +12,38 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import {withRouter} from "react-router-dom";
 import {useMutation} from '@apollo/react-hooks';
-import {DIS_LIKE, LIKE} from "../../constant/mutation";
+import {DELETE_NEWS, DIS_LIKE, LIKE} from "../../constant/mutation";
 import {AuthContext} from "../AuthProvider";
+import {GET_NEWS} from "../../constant/query";
 
 const News = ({news}) => {
+
+    const updateCache = (client,{data:{deleteNews:item}}) => {
+        const data = client.readQuery({
+            query: GET_NEWS,
+        });
+        const newData = {
+            news: data.news.filter(t=>t.id!==item.id)
+        }
+        client.writeQuery({
+            query: GET_NEWS,
+            data: newData
+        });
+    }
+
     const [addLike] = useMutation(LIKE);
     const [removeLike] = useMutation(DIS_LIKE);
+    const [deleteNews,{ loading: deleting, error: deleteError }] = useMutation(DELETE_NEWS);
+
     const authContext = useContext(AuthContext);
 
+    const remove = () => {
+        if (deleting) return;
+        deleteNews({
+            variables: { id: news.id },
+            update: updateCache
+        });
+    };
 
     let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
 
@@ -35,7 +59,7 @@ const News = ({news}) => {
                 <CardActions>
                     {
                         isNewsHasLikesFromCurrentUser ?
-                            <IconButton onClick={() => removeLike({variables:{id:news.id}})} aria-label="Like">
+                            <IconButton onClick={() => removeLike({variables: {id: news.id}})} aria-label="Like">
                                 <FavoriteIcon/>
                             </IconButton>
                             :
@@ -46,7 +70,7 @@ const News = ({news}) => {
                     <Typography>
                         {news.likes.length}
                     </Typography>
-                    <Button variant='contained' color='secondary'>
+                    <Button onClick={remove} variant='contained' color='secondary'>
                         Delete
                     </Button>
                 </CardActions>

@@ -20,3 +20,16 @@ export const DIS_LIKE = gql`
     }
   }
 `;
+export const DELETE_NEWS = gql`
+    mutation DeleteNews($id: String!) {
+      deleteNews (newsId:$id) {
+       id
+       title
+       body
+       likes{
+           id
+       }
+       
+    }
+    }
+    `;
