@@ -8,7 +8,7 @@ const schema = buildSchema(`
   addNews(title: String!, body: String!): News!
   updateNews(newsId: ID!, title: String, body: String): News!
   deleteNews(newsId: ID!):News
-  addNewsLike(newsId: ID!): News!
+  addNewsLike(newsId: String!): News!
   deleteNewsLike(newsId: ID!): News!
   }
 

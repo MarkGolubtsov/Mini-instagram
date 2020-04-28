@@ -8,7 +8,8 @@ const getUserFromStorage = () => {
     let data = jwt_decode(token);
     let user = {
         name: data.name,
-        email: data.email
+        email: data.email,
+        id:data['_id']
     };
     return user;
 };

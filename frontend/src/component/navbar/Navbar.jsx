@@ -24,11 +24,11 @@ class Navbar extends React.Component {
         return (
             <AppBar position='static'>
                 <Toolbar>
-                    <Button onClick={this.news}>
-                        News
-                    </Button>
                     {this.context.currentUser ?
                         <>
+                            <Button onClick={this.news}>
+                                News
+                            </Button>
                             <Button onClick={this.create}>
                                 Create news
                             </Button>
