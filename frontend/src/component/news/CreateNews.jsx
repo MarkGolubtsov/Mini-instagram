@@ -5,29 +5,41 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import {endpoints} from "../../constant/endpoints";
 import {withRouter} from 'react-router-dom';
 import {Routes} from "../../constant/Routes";
-import {RestRequest} from "../../service/requestService";
+import {useMutation} from "@apollo/react-hooks";
+import {CREATE_NEWS} from "../../constant/mutation";
+import {GET_NEWS} from "../../constant/query";
 
-class CreateNews extends React.Component {
+const CreateNews = (props) =>{
 
-    onSubmit = event => {
+    const updateCache = (client, {data: {createNews: item}}) => {
+        const data = client.readQuery({
+            query: GET_NEWS,
+        });
+        const newData = {
+            news: data.news.concat([item])
+        }
+        client.writeQuery({
+            query: GET_NEWS,
+            data: newData
+        });
+    }
+
+    const [createNews] = useMutation(CREATE_NEWS);
+
+    const onSubmit = event => {
         event.preventDefault();
         const title = event.target.elements[0].value;
-        const content = event.target.elements[1].value;
-        RestRequest.post(endpoints.postNews, {}, {title, content})
-            .then((response) => {
-                this.props.history.push(Routes.news);
-            }).catch(reason => {
-            if (reason.response.status === 401 || reason.response.status === 403) this.props.history.push(Routes.login);
-        });
+        const body = event.target.elements[1].value;
+        createNews({variables:{
+            title,body
+            },update:updateCache}).then((res)=>props.history.push(Routes.news))
     };
 
-    render() {
         return (
             <Container>
-                <form noValidate autoComplete='off' onSubmit={this.onSubmit}>
+                <form noValidate autoComplete='off' onSubmit={onSubmit}>
                     <Grid
                         container
                         direction="column"
@@ -57,7 +69,6 @@ class CreateNews extends React.Component {
             </Container>
 
         )
-    }
 }
 
 export default withRouter(CreateNews);

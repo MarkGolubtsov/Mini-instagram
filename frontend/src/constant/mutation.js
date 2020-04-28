@@ -33,3 +33,17 @@ export const DELETE_NEWS = gql`
     }
     }
     `;
+export const CREATE_NEWS = gql`
+mutation CreateNews($title: String!,$body: String!) {
+       createNews(title:$title,body:$body) {
+            id
+            title
+            body
+            likes{
+                id
+            }
+       
+       }
+      
+}
+`;

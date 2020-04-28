@@ -18,12 +18,12 @@ import {GET_NEWS} from "../../constant/query";
 
 const News = ({news}) => {
 
-    const updateCache = (client,{data:{deleteNews:item}}) => {
+    const updateCache = (client, {data: {deleteNews: item}}) => {
         const data = client.readQuery({
             query: GET_NEWS,
         });
         const newData = {
-            news: data.news.filter(t=>t.id!==item.id)
+            news: data.news.filter(t => t.id !== item.id)
         }
         client.writeQuery({
             query: GET_NEWS,
@@ -31,22 +31,30 @@ const News = ({news}) => {
         });
     }
 
-    const [addLike] = useMutation(LIKE);
-    const [removeLike] = useMutation(DIS_LIKE);
-    const [deleteNews,{ loading: deleting, error: deleteError }] = useMutation(DELETE_NEWS);
+    const [addLike, {loading: addLikeLoading}] = useMutation(LIKE);
+    const [removeLike, {loading: removeLikeLoading}] = useMutation(DIS_LIKE);
+    const [deleteNews, {loading: deleting, error: deleteError}] = useMutation(DELETE_NEWS);
 
     const authContext = useContext(AuthContext);
 
     const remove = () => {
         if (deleting) return;
         deleteNews({
-            variables: { id: news.id },
+            variables: {id: news.id},
             update: updateCache
         });
     };
 
-    let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
+    const like = () => {
+        if (addLikeLoading) return;
+        addLike({variables: {id: news.id}})
+    }
+    const unLike = () => {
+        if (removeLikeLoading) return;
+        removeLike({variables: {id: news.id}})
+    }
 
+    let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
     return (
         <Box m={1}>
             <Card>
@@ -58,14 +66,14 @@ const News = ({news}) => {
                 </CardContent>
                 <CardActions>
                     {
-                        isNewsHasLikesFromCurrentUser ?
-                            <IconButton onClick={() => removeLike({variables: {id: news.id}})} aria-label="Like">
-                                <FavoriteIcon/>
-                            </IconButton>
-                            :
-                            <IconButton onClick={() => addLike({variables: {id: news.id}})} aria-label="Like">
-                                <FavoriteBorderIcon/>
-                            </IconButton>
+                            isNewsHasLikesFromCurrentUser ?
+                                <IconButton onClick={unLike} aria-label="Like">
+                                    <FavoriteIcon/>
+                                </IconButton>
+                                :
+                                <IconButton onClick={like} aria-label="Like">
+                                    <FavoriteBorderIcon/>
+                                </IconButton>
                     }
                     <Typography>
                         {news.likes.length}
