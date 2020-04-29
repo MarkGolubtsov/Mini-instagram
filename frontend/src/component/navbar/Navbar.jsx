@@ -9,10 +9,11 @@ import {AuthContext} from "../AuthProvider";
 import IconButton from "@material-ui/core/IconButton";
 import {ExitToApp} from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
+import {getRouteForCreate} from "../../helper/routeHelper";
 
 class Navbar extends React.Component {
     create = () => {
-        this.props.history.push(Routes.newsCreate);
+        this.props.history.push(getRouteForCreate(Routes.editor));
     };
 
     news = () => {

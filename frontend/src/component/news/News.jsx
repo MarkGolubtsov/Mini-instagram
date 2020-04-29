@@ -6,7 +6,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -15,8 +14,13 @@ import {useMutation} from '@apollo/react-hooks';
 import {DELETE_NEWS, DIS_LIKE, LIKE} from "../../constant/mutation";
 import {AuthContext} from "../AuthProvider";
 import {GET_NEWS} from "../../constant/query";
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import {Routes} from "../../constant/Routes";
+import {getRouteForUpdate} from "../../helper/routeHelper";
 
-const News = ({news}) => {
+const News = (props) => {
+    const news = props.news;
 
     const updateCache = (client, {data: {deleteNews: item}}) => {
         const data = client.readQuery({
@@ -33,7 +37,7 @@ const News = ({news}) => {
 
     const [addLike, {loading: addLikeLoading}] = useMutation(LIKE);
     const [removeLike, {loading: removeLikeLoading}] = useMutation(DIS_LIKE);
-    const [deleteNews, {loading: deleting, error: deleteError}] = useMutation(DELETE_NEWS);
+    const [deleteNews, {loading: deleting}] = useMutation(DELETE_NEWS);
 
     const authContext = useContext(AuthContext);
 
@@ -54,6 +58,10 @@ const News = ({news}) => {
         removeLike({variables: {id: news.id}})
     }
 
+    const onEdit = () => {
+        props.history.push(getRouteForUpdate(Routes.editor,news.id));
+    }
+
     let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
     return (
         <Box m={1}>
@@ -65,15 +73,16 @@ const News = ({news}) => {
                     </Typography>
                 </CardContent>
                 <CardActions>
+
                     {
-                            isNewsHasLikesFromCurrentUser ?
-                                <IconButton onClick={unLike} aria-label="Like">
-                                    <FavoriteIcon/>
-                                </IconButton>
-                                :
-                                <IconButton onClick={like} aria-label="Like">
-                                    <FavoriteBorderIcon/>
-                                </IconButton>
+                        isNewsHasLikesFromCurrentUser ?
+                            <IconButton onClick={unLike} aria-label="Like">
+                                <FavoriteIcon/>
+                            </IconButton>
+                            :
+                            <IconButton onClick={like} aria-label="Like">
+                                <FavoriteBorderIcon/>
+                            </IconButton>
                     }
                     <Typography>
                         {news.likes.length}
@@ -81,10 +90,15 @@ const News = ({news}) => {
                     {
                         authContext.currentUser.id === news.owner.id
                             ?
-                            <Button onClick={remove} variant='contained' color='secondary'>
-                                Delete
-                            </Button>
-                            :<React.Fragment/>
+                            <React.Fragment>
+                                <IconButton color='secondary' onClick={remove} aria-label="delete">
+                                    <DeleteIcon fontSize="large"/>
+                                </IconButton>
+                                <IconButton color='primary' onClick={onEdit} aria-label="edit">
+                                    <EditIcon fontSize="large"/>
+                                </IconButton>
+                            </React.Fragment>
+                            : <React.Fragment/>
                     }
 
                 </CardActions>

@@ -53,3 +53,19 @@ mutation CreateNews($title: String!,$body: String!) {
       
 }
 `;
+
+export const UPDATE_NEWS = gql`
+   mutation UpdateNews($id: String!, $title: String, $body: String) {
+    updateNews(newsId:$id,title:$title,body:$body) {
+       id
+       title
+       body
+       likes {
+        id
+       }
+    }    
+   
+   }
+   
+    
+    `;

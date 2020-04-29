@@ -3,7 +3,7 @@ import {BrowserRouter, Redirect, Switch} from 'react-router-dom';
 import Navbar from "./component/navbar/Navbar";
 import NewsList from "./component/news/NewsList";
 import {Routes} from "./constant/Routes";
-import CreateNews from "./component/news/CreateNews";
+import CreateNews from "./component/news/Editor";
 import Registration from "./component/registration/Registration";
 import {AuthContext} from "./component/AuthProvider";
 import Login from "./component/login/Login";
@@ -44,7 +44,7 @@ class App extends React.Component {
                     <Switch>
                         <OnlyGuestRoute exact path={Routes.login} component={Login}/>
                         <OnlyGuestRoute exact path={Routes.registration} component={Registration}/>
-                        <PrivateRoute exact path={Routes.newsCreate} component={CreateNews}/>
+                        <PrivateRoute exact path={Routes.editor} component={CreateNews}/>
                         <PrivateRoute exact path={Routes.news} component={NewsList}/>
                         <Redirect to={Routes.news}/>
                     </Switch>

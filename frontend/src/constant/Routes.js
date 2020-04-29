@@ -1,6 +1,6 @@
 export const Routes = {
     news: '/news',
-    newsCreate: '/news/create',
+    editor: '/news/:id?/editor',
     login: '/login',
     registration: '/registration'
 };

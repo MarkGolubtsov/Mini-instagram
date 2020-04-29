@@ -23,6 +23,6 @@ app.use('/graphql', authenticate.verifyUser, graphqlHTTP({
 }));
 const routes = require('./app/route/routes')
 app.use('/', routes);
-mongoose.connect(db.url, {'useCreateIndex': true, useNewUrlParser: true, useUnifiedTopology: true}, (err) => {
+mongoose.connect(db.url, {'useCreateIndex': true, useNewUrlParser: true, useUnifiedTopology: true,  useFindAndModify: false }, (err) => {
     err ? console.log(err.message) : console.log('MongoDB Successfully Connected ...');
 });

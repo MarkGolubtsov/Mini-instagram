@@ -16,3 +16,14 @@ export const GET_NEWS = gql`
     }
 
 `
+export const GET_ONE_NEWS = gql`
+query updateNews($id:String! ) {
+    oneNews(newsId:$id) {
+        id
+        title
+        body
+    }
+}
+
+
+`
