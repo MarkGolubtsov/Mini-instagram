@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let newsSchema = mongoose.Schema({
-    title : {
+let postsSchema = mongoose.Schema({
+    title: {
         type: String,
         required: true
     },
@@ -14,10 +14,15 @@ let newsSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+    imageUrl: {
+        type: String,
+        required: false,
+        default: ''
+    },
     owner: {
-        type:Schema.Types.ObjectId,
-        ref:'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
-},{versionKey:false});
+}, {versionKey: false});
 
- module.exports = mongoose.model('News', newsSchema);
+module.exports = mongoose.model('Posts', postsSchema);

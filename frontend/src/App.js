@@ -1,9 +1,8 @@
 import React from 'react';
 import {BrowserRouter, Redirect, Switch} from 'react-router-dom';
 import Navbar from "./component/navbar/Navbar";
-import NewsList from "./component/news/NewsList";
+import Posts from "./component/news/Posts";
 import {Routes} from "./constant/Routes";
-import CreateNews from "./component/news/Editor";
 import Registration from "./component/registration/Registration";
 import {AuthContext} from "./component/AuthProvider";
 import Login from "./component/login/Login";
@@ -12,13 +11,17 @@ import ApolloClient from 'apollo-client';
 import {endpoints} from "./constant/endpoints";
 import {OnlyGuestRoute} from "./route/OnlyGuestRoute";
 import {PrivateRoute} from "./route/PrivateRoute";
-import {createHttpLink} from "apollo-link-http";
 import {setContext} from 'apollo-link-context';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {createUploadLink} from "apollo-upload-client";
+import Editor from "./component/news/editor/EditorContainer";
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
     uri: endpoints.graphql,
-});
+    headers: {
+        "keep-alive": "true"
+    }
+})
 
 const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem('Jwt token');
@@ -30,7 +33,7 @@ const authLink = setContext((_, { headers }) => {
     }
 });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache()
 });
@@ -44,9 +47,9 @@ class App extends React.Component {
                     <Switch>
                         <OnlyGuestRoute exact path={Routes.login} component={Login}/>
                         <OnlyGuestRoute exact path={Routes.registration} component={Registration}/>
-                        <PrivateRoute exact path={Routes.editor} component={CreateNews}/>
-                        <PrivateRoute exact path={Routes.news} component={NewsList}/>
-                        <Redirect to={Routes.news}/>
+                        <PrivateRoute exact path={Routes.editor} component={Editor}/>
+                        <PrivateRoute exact path={Routes.posts} component={Posts}/>
+                        <Redirect to={Routes.posts}/>
                     </Switch>
                 </BrowserRouter>
             </ApolloProvider>

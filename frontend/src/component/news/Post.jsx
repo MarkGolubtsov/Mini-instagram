@@ -11,71 +11,72 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import {withRouter} from "react-router-dom";
 import {useMutation} from '@apollo/react-hooks';
-import {DELETE_NEWS, DIS_LIKE, LIKE} from "../../constant/mutation";
+import {DELETE_POST, DIS_LIKE, LIKE} from "../../constant/mutation";
 import {AuthContext} from "../AuthProvider";
-import {GET_NEWS} from "../../constant/query";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {Routes} from "../../constant/Routes";
 import {getRouteForUpdate} from "../../helper/routeHelper";
+import {GET_POSTS} from "../../constant/query";
 
-const News = (props) => {
-    const news = props.news;
+const Post = (props) => {
+    const post = props.post;
 
-    const updateCache = (client, {data: {deleteNews: item}}) => {
+    const updateCache = (client, {data: {deletePost: item}}) => {
         const data = client.readQuery({
-            query: GET_NEWS,
+            query: GET_POSTS,
         });
         const newData = {
-            news: data.news.filter(t => t.id !== item.id)
+            posts: data.posts.filter(t => t.id !== item.id)
         }
         client.writeQuery({
-            query: GET_NEWS,
+            query: GET_POSTS,
             data: newData
         });
     }
 
     const [addLike, {loading: addLikeLoading}] = useMutation(LIKE);
     const [removeLike, {loading: removeLikeLoading}] = useMutation(DIS_LIKE);
-    const [deleteNews, {loading: deleting}] = useMutation(DELETE_NEWS);
+    const [deletePost, {loading: deleting}] = useMutation(DELETE_POST);
 
     const authContext = useContext(AuthContext);
 
     const remove = () => {
         if (deleting) return;
-        deleteNews({
-            variables: {id: news.id},
+        deletePost({
+            variables: {id: post.id},
             update: updateCache
         });
     };
 
     const like = () => {
         if (addLikeLoading) return;
-        addLike({variables: {id: news.id}})
+        addLike({variables: {id: post.id}})
     }
     const unLike = () => {
         if (removeLikeLoading) return;
-        removeLike({variables: {id: news.id}})
+        removeLike({variables: {id: post.id}})
     }
 
     const onEdit = () => {
-        props.history.push(getRouteForUpdate(Routes.editor,news.id));
+        props.history.push(getRouteForUpdate(Routes.editor, post.id));
     }
 
-    let isNewsHasLikesFromCurrentUser = news.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
+    let isPostHasLikesFromCurrentUser = post.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
     return (
         <Box m={1}>
             <Card>
-                <CardHeader title={news.title}/>
+                <CardHeader title={post.title}/>
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {news.body}
+                        {post.body}
                     </Typography>
+                    <img src={`${post.imageUrl}`}/>
                 </CardContent>
                 <CardActions>
 
                     {
-                        isNewsHasLikesFromCurrentUser ?
+                        isPostHasLikesFromCurrentUser ?
                             <IconButton onClick={unLike} aria-label="Like">
                                 <FavoriteIcon/>
                             </IconButton>
@@ -85,10 +86,10 @@ const News = (props) => {
                             </IconButton>
                     }
                     <Typography>
-                        {news.likes.length}
+                        {post.likes.length}
                     </Typography>
                     {
-                        authContext.currentUser.id === news.owner.id
+                        authContext.currentUser.id === post.owner.id
                             ?
                             <React.Fragment>
                                 <IconButton color='secondary' onClick={remove} aria-label="delete">
@@ -108,4 +109,4 @@ const News = (props) => {
     )
 
 }
-export default withRouter(News);
+export default withRouter(Post);

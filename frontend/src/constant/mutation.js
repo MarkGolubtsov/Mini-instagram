@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const LIKE = gql`
-   mutation AddNewsLike($id: String!) {
-     addNewsLike(newsId: $id) {
+   mutation AddPostLike($id: String!) {
+     addPostLike(postId: $id) {
      id
       likes {
       id
@@ -11,8 +11,8 @@ export const LIKE = gql`
   }
 `;
 export const DIS_LIKE = gql`
-   mutation DeleteNewsLike($id: String!) {
-     deleteNewsLike(newsId: $id) {
+   mutation DeletePostLike($id: String!) {
+     deletePostLike(postId: $id) {
      id
       likes {
       id
@@ -20,9 +20,9 @@ export const DIS_LIKE = gql`
     }
   }
 `;
-export const DELETE_NEWS = gql`
-    mutation DeleteNews($id: String!) {
-      deleteNews (newsId:$id) {
+export const DELETE_POST = gql`
+    mutation DeletePost($id: String!) {
+      deletePost (postId:$id) {
        id
        title
        body
@@ -36,15 +36,16 @@ export const DELETE_NEWS = gql`
     }
     }
     `;
-export const CREATE_NEWS = gql`
-mutation CreateNews($title: String!,$body: String!) {
-       createNews(title:$title,body:$body) {
+export const CREATE_POST= gql`
+mutation CreatePost($title: String!,$body: String!, $image:FileUpload!) {
+       createPost(title:$title,body:$body,image:$image) {
             id
             title
             body
               owner {
                 id
              }
+            imageUrl
             likes {
                 id
             }
@@ -54,9 +55,9 @@ mutation CreateNews($title: String!,$body: String!) {
 }
 `;
 
-export const UPDATE_NEWS = gql`
-   mutation UpdateNews($id: String!, $title: String, $body: String) {
-    updateNews(newsId:$id,title:$title,body:$body) {
+export const UPDATE_POST = gql`
+   mutation UpdatePost($id: String!, $title: String, $body: String) {
+    updatePost(postId:$id,title:$title,body:$body) {
        id
        title
        body

@@ -6,9 +6,11 @@ const schema = require('./app/model/schema')
 const mongoose = require('mongoose');
 const passport = require('passport');
 const authenticate = require('./app/auth/authenticate');
-const User = require('./app/model/userModel');
+const bodyParser  =require('body-parser-graphql');
 const cors = require("cors");
 const app = express();
+const { graphqlUploadExpress } = require('graphql-upload')
+app.use(bodyParser.graphql());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 app.use(passport.initialize());
@@ -17,7 +19,7 @@ app.use(cors());
 app.listen(8090, () => {
     console.log(`Server started on http://localhost:8090`);
 })
-app.use('/graphql', authenticate.verifyUser, graphqlHTTP({
+app.use('/graphql', authenticate.verifyUser,graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 1 }), graphqlHTTP({
     schema,
     rootValue: resolver
 }));

@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
 
-export const GET_NEWS = gql`
+export const GET_POSTS = gql`
     query {
-        news {
+        posts {
             id
             title
             body
+            imageUrl
             owner {
             id
             }
@@ -16,9 +17,9 @@ export const GET_NEWS = gql`
     }
 
 `
-export const GET_ONE_NEWS = gql`
-query updateNews($id:String! ) {
-    oneNews(newsId:$id) {
+export const GET_ONE_POST = gql`
+query getPost($id:String! ) {
+    onePost(postId:$id) {
         id
         title
         body

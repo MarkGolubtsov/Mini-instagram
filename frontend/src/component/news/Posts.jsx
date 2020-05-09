@@ -5,31 +5,26 @@ import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {withRouter} from "react-router-dom";
 import {useQuery} from "react-apollo";
-import {GET_NEWS} from "../../constant/query";
-import News from "./News";
+import {GET_NEWS, GET_POSTS} from "../../constant/query";
+import News from "./Post";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Alert from "../alert/Alert";
+import Post from "./Post";
 
-const NewsList = () => {
-    const {loading, error, data} = useQuery(GET_NEWS);
+const Posts = () => {
+    const {loading, error, data} = useQuery(GET_POSTS);
 
-    let news = (loading || !data) ? [] : data.news.map(news => {
-        return <News key={news['id']} news={news}/>
+    let posts = (loading || !data) ? [] : data.posts.map(post => {
+        return <Post key={post['id']} post={post}/>
     });
-
     return (
         <React.Fragment>
             {error ? <Alert severity="error">{error.message}</Alert> : <React.Fragment/>}
             <Container maxWidth="sm">
-                <Box display="flex" justifyContent="center">
-                    <IconButton>
-                        <FavoriteIcon/>
-                    </IconButton>
-                </Box>
                 <Box>
-                    {loading || !data ? <LinearProgress/> : news}
+                    {loading || !data ? <LinearProgress/> : posts}
                 </Box>
             </Container>
         </React.Fragment>)
 }
-export default withRouter(NewsList)
+export default withRouter(Posts)

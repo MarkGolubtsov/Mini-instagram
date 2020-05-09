@@ -1,27 +1,31 @@
 const {buildSchema} = require('graphql');
 
 const schema = buildSchema(`
+scalar FileUpload
+
  type Query {
-  news: [News!]!
-  oneNews(newsId: String!): News
+  posts: [Post!]!
+  onePost(postId: String!): Post
  }
  type Mutation {
-  createNews(title: String!, body: String!): News!
-  updateNews(newsId: String!, title: String, body: String): News!
-  deleteNews(newsId: String!):News
-  addNewsLike(newsId: String!): News!
-  deleteNewsLike(newsId: String!): News!
+  createPost(title: String!, body: String!, image:FileUpload!): Post!
+  updatePost(postId: String!, title: String, body: String): Post!
+  deletePost(postId: String!):Post
+  addPostLike(postId: String!): Post!
+  deletePostLike(postId: String!): Post!
   }
+  
 
-    type News {
+    type Post {
     id: ID!
     title: String!
+    imageUrl: String!
     owner: User!
     body: String!
     likes: [User!]!
   }
   
-
+  
 type User {
     id: ID!
     name: String
