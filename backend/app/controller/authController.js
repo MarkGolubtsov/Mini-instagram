@@ -1,56 +1,31 @@
 const User = require('../model/userModel');
-const jwt = require('jsonwebtoken');
-const auth = require('../config/auth');
-const  md5 = require('md5');
+const passport = require('passport');
+const authenticate = require('../auth/authenticate');
 
-exports.registration = (request, response) => {
-    let user = new User();
-    user.name = request.body.name;
-    user.surname = request.body.surname;
-    user.email = request.body.email;
-    user.password = getHashPassword(request.body.password);
-    user.save((err) => {
+exports.registration = (req, res) => {
+    User.register(new User({name: req.body.name, email: req.body.email}), req.body.password, (err, user) => {
         if (err) {
-            if (err.code === 11000) {
-                response.status(409).send({message: 'Account already exists.'});
-                return;
-            }
-            response.status(400).send(err);
-            return
-        }
-        response.status(200).send({
-            token: generationToken(user)
-        })
-
-    })
-};
-
-exports.login = (request, response) => {
-    User.findOne({email: request.body.email, password: getHashPassword(request.body.password)}, (err, user) => {
-        if (!user) {
-            response.status(404).send({
-                message: 'User not found.'
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({err: err});
+        } else {
+            passport.authenticate('local')(req, res, () => {
+                const token = authenticate.generateToken({_id: req.user._id, name: req.user.name, email: req.user.email});
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({token: token, status: 'Successfully Logged In'});
             });
-            return;
         }
-        if (err) {
-            response.send(err);
-            return;
-        }
-
-        response.status(200).send({
-            token: generationToken(user)
-        })
-    })
-};
-let generationToken = (user) => {
-    return jwt.sign({
-        name: user.name,
-        email: user.email,
-        surname: user.surname
-    }, auth.secretKey, {expiresIn: auth.expires});
+    });
 };
 
-let getHashPassword = (password) => {
-    return md5(password);
-};
+exports.login = (req, res) => {
+    passport.authenticate('local')(req, res, () => {
+        const token = authenticate.generateToken({_id: req.user._id, name: req.user.name, email: req.user.email});
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({token: token, status: 'Successfully Logged In'});
+    });
+}
+
+

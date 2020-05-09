@@ -1,40 +1,61 @@
 import React from 'react';
-import './App.css';
-import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Redirect, Switch} from 'react-router-dom';
 import Navbar from "./component/navbar/Navbar";
-import NewsList from "./component/news/NewsList";
+import Posts from "./component/news/Posts";
 import {Routes} from "./constant/Routes";
-import CreateNews from "./component/news/CreateNews";
 import Registration from "./component/registration/Registration";
 import {AuthContext} from "./component/AuthProvider";
 import Login from "./component/login/Login";
+import {ApolloProvider} from 'react-apollo';
+import ApolloClient from 'apollo-client';
+import {endpoints} from "./constant/endpoints";
+import {OnlyGuestRoute} from "./route/OnlyGuestRoute";
+import {PrivateRoute} from "./route/PrivateRoute";
+import {setContext} from 'apollo-link-context';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {createUploadLink} from "apollo-upload-client";
+import Editor from "./component/news/editor/EditorContainer";
+
+const httpLink = createUploadLink({
+    uri: endpoints.graphql,
+    headers: {
+        "keep-alive": "true"
+    }
+})
+
+const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem('Jwt token');
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : "",
+        }
+    }
+});
+
+export const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+});
 
 class App extends React.Component {
     render() {
         return (
-            <div className="App">
+            <ApolloProvider client={client}>
                 <BrowserRouter>
                     <Navbar/>
-                    {this.context.currentUser ?
-                        <Switch>
-                            <Route exact path={Routes.newsCreate} component={CreateNews}/>
-                            <Route exact path={Routes.news} component={NewsList}/>
-                            <Route exact path={Routes.login} component={Login}/>
-                            <Route exact path={Routes.registration} component={Registration}/>
-                            <Redirect to={Routes.news}/>
-                        </Switch>
-                        :
-                        <Switch>
-                            <Route exact path={Routes.news} component={NewsList}/>
-                            <Route exact path={Routes.login} component={Login}/>
-                            <Route exact path={Routes.registration} component={Registration}/>
-                            <Redirect to={Routes.login}/>
-                        </Switch>
-                    }
+                    <Switch>
+                        <OnlyGuestRoute exact path={Routes.login} component={Login}/>
+                        <OnlyGuestRoute exact path={Routes.registration} component={Registration}/>
+                        <PrivateRoute exact path={Routes.editor} component={Editor}/>
+                        <PrivateRoute exact path={Routes.posts} component={Posts}/>
+                        <Redirect to={Routes.posts}/>
+                    </Switch>
                 </BrowserRouter>
-            </div>
+            </ApolloProvider>
         );
     }
-};
+}
+
 App.contextType = AuthContext;
 export default App;

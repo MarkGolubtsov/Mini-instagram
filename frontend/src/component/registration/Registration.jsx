@@ -19,10 +19,9 @@ class Registration extends React.Component {
         event.preventDefault();
 
         const name = event.target.elements[0].value;
-        const surname = event.target.elements[2].value;
-        const email = event.target.elements[4].value;
-        const password = event.target.elements[6].value;
-        let resultPromise = this.context.registration(name,surname,email,password);
+        const email = event.target.elements[2].value;
+        const password = event.target.elements[4].value;
+        let resultPromise = this.context.registration(name,email,password);
         resultPromise.then(() => {
             this.props.history.push(Routes.news);
         }).catch(reason => {
@@ -39,7 +38,7 @@ class Registration extends React.Component {
                     </Typography>
                     <form noValidate onSubmit={this.registration}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={12}>
                                 <TextField
                                     autoComplete="fname"
                                     name="firstName"
@@ -49,17 +48,6 @@ class Registration extends React.Component {
                                     id="firstName"
                                     label="First Name"
                                     autoFocus
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="lname"
                                 />
                             </Grid>
                             <Grid item xs={12}>
