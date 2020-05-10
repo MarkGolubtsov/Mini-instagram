@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Redirect, Switch} from 'react-router-dom';
 import Navbar from "./component/navbar/Navbar";
-import Posts from "./component/news/Posts";
+import Posts from "./component/posts/Posts";
 import {Routes} from "./constant/Routes";
 import Registration from "./component/registration/Registration";
 import {AuthContext} from "./component/AuthProvider";
@@ -14,7 +14,8 @@ import {PrivateRoute} from "./route/PrivateRoute";
 import {setContext} from 'apollo-link-context';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {createUploadLink} from "apollo-upload-client";
-import Editor from "./component/news/editor/EditorContainer";
+import Editor from "./component/posts/editor/EditorContainer";
+import Profile from "./component/profile/Profile";
 
 const httpLink = createUploadLink({
     uri: endpoints.graphql,
@@ -49,6 +50,7 @@ class App extends React.Component {
                         <OnlyGuestRoute exact path={Routes.registration} component={Registration}/>
                         <PrivateRoute exact path={Routes.editor} component={Editor}/>
                         <PrivateRoute exact path={Routes.posts} component={Posts}/>
+                        <PrivateRoute exact path={Routes.profile} component={Profile}/>
                         <Redirect to={Routes.posts}/>
                     </Switch>
                 </BrowserRouter>

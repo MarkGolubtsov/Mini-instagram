@@ -2,7 +2,7 @@ import * as React from 'react';
 import {withRouter} from 'react-router-dom';
 import {Routes} from "../../../constant/Routes";
 import {useMutation, useQuery} from "@apollo/react-hooks";
-import {GET_ONE_POST, GET_POSTS} from "../../../constant/query";
+import {GET_MY_POSTS, GET_ONE_POST, GET_POSTS} from "../../../constant/query";
 import {CREATE_POST, UPDATE_POST} from "../../../constant/mutation";
 import Editor from "./Editor";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -11,14 +11,14 @@ import Container from "@material-ui/core/Container";
 const EditorContainer = (props) => {
     const updateCache = (client, {data: {createPost: item}}) => {
         const data = client.readQuery({
-            query: GET_POSTS,
+            query: GET_MY_POSTS,
         });
         const newData = {
-            posts: data.posts.concat([item])
+            myPosts: data.myPosts.concat([item])
         }
         client.writeQuery({
-            query: GET_POSTS,
-            data: newData
+            query: GET_MY_POSTS,
+            data: {...data,...newData}
         });
     }
     const id = props.match.params.id;
@@ -38,13 +38,13 @@ const EditorContainer = (props) => {
                 variables: {
                     title, body, image
                 }, update: updateCache
-            }).then((res) => props.history.push(Routes.posts))
+            }).then((res) => props.history.push(Routes.profile))
             :
             updatePost({
                 variables: {
                     id, title, body
                 }
-            }).then((res) => props.history.push(Routes.posts))
+            }).then((res) => props.history.push(Routes.profile))
     };
     return (
         (loading || mutationLoading) ?

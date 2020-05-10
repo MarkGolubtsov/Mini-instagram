@@ -1,15 +1,25 @@
 const Posts = require('../model/postsModel');
+const {deleteFile} = require("../file/fileWorker");
 const {saveFile} = require("../file/fileWorker");
 const ObjectId = require('mongoose').Types.ObjectId;
 const {GraphQLUpload} = require('graphql-upload');
 
 const resolver = {
     FileUpload: GraphQLUpload,
-    posts: () => {
-        return Posts.find().populate('likes owner').then(post => post).catch(err => err);
+    posts: async (args, context) => {
+        let user = new ObjectId(context.user._id);
+        return Posts.find({owner: {$ne: user}}).populate('likes owner').then(post => post).catch(err => err);
     },
-    onePost: (args) => {
+    onePost: async (args) => {
         return Posts.findById({_id: new ObjectId(args.postId)}).then(post => post).catch(err => err)
+    },
+    myPosts: async (args, context) => {
+        let user = context.user._id
+        return Posts.find({owner: user}).populate('likes owner').then(post => post).catch(err => err);
+    },
+    userPosts: async (args) => {
+        let id = args.userId;
+        return Posts.find({owner: {id}}).populate('likes owner').then(post => post).catch(err => err);
     },
     createPost: async (args, context) => {
         args.owner = context.user._id;
@@ -17,13 +27,15 @@ const resolver = {
         delete args.image;
         const image = await file.promise.then(file => file);
         const {createReadStream} = image
-        args.imageUrl = await saveFile(createReadStream());
+        let metaImage = await saveFile(createReadStream());
+        args.imageUrl = metaImage.url;
+        args.imageName = metaImage.name;
         return Posts.create(args).then((post) => {
             post.owner.id = context.user._id;
             return post;
         }).catch(err => err);
     },
-    updatePost: (args, context) => {
+    updatePost: async (args, context) => {
         return Posts.findById({_id: new ObjectId(args.postId)}).then(post => {
             if (post.owner.equals(context.user._id)) {
                 args.likes = []
@@ -32,10 +44,13 @@ const resolver = {
             return post;
         }).catch(err => err);
     },
-    deletePost: (args) => {
-        return Posts.findOneAndDelete({_id: new ObjectId(args.postId)}).populate('likes owner')
+    deletePost: async (args) => {
+        return Posts.findOneAndDelete({_id:args.postId}).populate('likes owner').then(post=>{
+            deleteFile(post.imageName);
+            return post;
+        })
     },
-    addPostLike: (args, context) => {
+    addPostLike: async (args, context) => {
         return Posts.findById(new ObjectId(args.postId)).populate('likes owner').then(post => {
             if (post) {
                 let currentUserId = context.user._id;
@@ -47,7 +62,7 @@ const resolver = {
             }
         })
     },
-    deletePostLike: (args, context) => {
+    deletePostLike: async (args, context) => {
         return Posts.findById(new ObjectId(args.postId)).populate('likes')
             .then(post => {
                 let currentUserId = context.user._id;
@@ -60,7 +75,6 @@ const resolver = {
                 }
             })
             .catch(err => err);
-
     }
 }
 module.exports = resolver;

@@ -19,6 +19,11 @@ let postsSchema = mongoose.Schema({
         required: false,
         default: ''
     },
+    imageName: {
+        type: String,
+        required: false,
+        default: ''
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'

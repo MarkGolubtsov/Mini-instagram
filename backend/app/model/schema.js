@@ -5,8 +5,11 @@ scalar FileUpload
 
  type Query {
   posts: [Post!]!
+  myPosts: [Post!]!
   onePost(postId: String!): Post
+  userPosts(userId: String!): [Post!]
  }
+ 
  type Mutation {
   createPost(title: String!, body: String!, image:FileUpload!): Post!
   updatePost(postId: String!, title: String, body: String): Post!

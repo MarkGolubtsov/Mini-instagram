@@ -17,21 +17,23 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {Routes} from "../../constant/Routes";
 import {getRouteForUpdate} from "../../helper/routeHelper";
-import {GET_POSTS} from "../../constant/query";
+import {GET_MY_POSTS, GET_POSTS} from "../../constant/query";
 
 const Post = (props) => {
     const post = props.post;
 
     const updateCache = (client, {data: {deletePost: item}}) => {
         const data = client.readQuery({
-            query: GET_POSTS,
+            query: GET_MY_POSTS,
         });
+        console.log(data);
+        console.log(item);
         const newData = {
-            posts: data.posts.filter(t => t.id !== item.id)
+            myPosts: data.myPosts.filter(t => t.id !== item.id)
         }
         client.writeQuery({
-            query: GET_POSTS,
-            data: newData
+            query: GET_MY_POSTS,
+            data: {...data,...newData}
         });
     }
 
