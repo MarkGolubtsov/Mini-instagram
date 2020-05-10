@@ -1,7 +1,6 @@
 import * as React from "react";
 import {useContext} from "react";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -17,7 +16,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {Routes} from "../../constant/Routes";
 import {getRouteForUpdate} from "../../helper/routeHelper";
-import {GET_MY_POSTS, GET_POSTS} from "../../constant/query";
+import {GET_MY_POSTS} from "../../constant/query";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardActionArea from "@material-ui/core/CardActionArea";
 
 const Post = (props) => {
     const post = props.post;
@@ -67,16 +68,24 @@ const Post = (props) => {
     let isPostHasLikesFromCurrentUser = post.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
     return (
         <Box m={1}>
-            <Card>
-                <CardHeader title={post.title}/>
-                <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {post.body}
-                    </Typography>
-                    <img src={`${post.imageUrl}`}/>
-                </CardContent>
+            <Card >
+                <CardActionArea>
+                    <CardMedia
+                        height='50%'
+                        component="img"
+                        alt="photo"
+                        image={post.imageUrl}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {post.title}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {post.body}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
                 <CardActions>
-
                     {
                         isPostHasLikesFromCurrentUser ?
                             <IconButton onClick={unLike} aria-label="Like">
@@ -90,22 +99,21 @@ const Post = (props) => {
                     <Typography>
                         {post.likes.length}
                     </Typography>
-                    {
-                        authContext.currentUser.id === post.owner.id
-                            ?
-                            <React.Fragment>
-                                <IconButton color='secondary' onClick={remove} aria-label="delete">
-                                    <DeleteIcon fontSize="large"/>
-                                </IconButton>
-                                <IconButton color='primary' onClick={onEdit} aria-label="edit">
-                                    <EditIcon fontSize="large"/>
-                                </IconButton>
-                            </React.Fragment>
-                            : <React.Fragment/>
+                    {authContext.currentUser.id === post.owner.id
+                    ?
+                    <React.Fragment>
+                        <IconButton color='secondary' onClick={remove} aria-label="delete">
+                            <DeleteIcon fontSize="large"/>
+                        </IconButton>
+                        <IconButton color='primary' onClick={onEdit} aria-label="edit">
+                            <EditIcon fontSize="large"/>
+                        </IconButton>
+                    </React.Fragment>
+                    : <React.Fragment/>
                     }
-
                 </CardActions>
             </Card>
+
         </Box>
 
     )

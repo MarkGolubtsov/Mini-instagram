@@ -6,6 +6,7 @@ import {useQuery} from "react-apollo";
 import {GET_POSTS} from "../../constant/query";
 import Post from "./Post";
 import Alert from "../alert/Alert";
+import Typography from "@material-ui/core/Typography";
 
 const Posts = () => {
     const {loading, error, data} = useQuery(GET_POSTS);
@@ -19,7 +20,11 @@ const Posts = () => {
             {error ? <Alert severity="error">{error.message}</Alert> : <React.Fragment/>}
             <Container maxWidth="sm">
                 <Box>
-                    {loading || !data ? <LinearProgress/> : posts}
+                    {loading || !data
+                        ?
+                        <LinearProgress/>
+                        :
+                        posts.length > 1 ? posts : <Typography>No posts</Typography>}
                 </Box>
             </Container>
         </React.Fragment>)
