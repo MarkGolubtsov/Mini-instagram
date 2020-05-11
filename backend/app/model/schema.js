@@ -6,6 +6,7 @@ scalar FileUpload
  type Query {
   posts: [Post!]!
   myPosts: [Post!]!
+  likedPosts: [Post!]
   onePost(postId: String!): Post
   userPosts(userId: String!): [Post!]
  }

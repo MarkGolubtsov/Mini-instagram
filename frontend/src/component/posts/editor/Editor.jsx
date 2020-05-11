@@ -1,6 +1,5 @@
 import * as React from "react";
 import Container from "@material-ui/core/Container";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
@@ -67,7 +66,7 @@ export default class Editor extends React.Component {
                             Body:
                         </Grid>
                         <Grid item>
-                            <TextField onChange={this.onChangeBody}  value={this.state.body} placeholder="body"
+                            <TextField onChange={this.onChangeBody} value={this.state.body} placeholder="body"
                                        variant="outlined" id="body" multiline rowsMax={5}/>
                         </Grid>
                     </Grid>
@@ -99,7 +98,7 @@ export default class Editor extends React.Component {
                         <Grid item>
                             <Button style={{marginLeft: '4em'}}
                                     variant="contained"
-                                    color="primary" onClick={() =>this.props.onCancel()}>
+                                    color="primary" onClick={() => this.props.onCancel()}>
                                 Cancel
                             </Button>
                         </Grid>

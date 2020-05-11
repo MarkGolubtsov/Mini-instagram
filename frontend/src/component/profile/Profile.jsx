@@ -6,7 +6,6 @@ import Alert from "../alert/Alert";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import Typography from "@material-ui/core/Typography";
 
 const Profile = () => {
 
@@ -22,8 +21,7 @@ const Profile = () => {
                 <Box>
                     {loading || !data
                         ? <LinearProgress/>
-                        :
-                        posts.length > 1 ? posts : <Typography>No posts</Typography>}
+                        : posts}
                 </Box>
             </Container>
         </React.Fragment>)

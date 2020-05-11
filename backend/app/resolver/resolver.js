@@ -17,6 +17,10 @@ const resolver = {
         let user = context.user._id
         return Posts.find({owner: user}).populate('likes owner').then(post => post).catch(err => err);
     },
+    likedPosts:async (args,context) =>{
+        let user = context.user._id;
+        return Posts.find({likes: new ObjectId(user)}).populate('likes owner').then(post => post).catch(err => err);
+    },
     userPosts: async (args) => {
         let id = args.userId;
         return Posts.find({owner: {id}}).populate('likes owner').then(post => post).catch(err => err);
@@ -51,7 +55,7 @@ const resolver = {
         })
     },
     addPostLike: async (args, context) => {
-        return Posts.findById(new ObjectId(args.postId)).populate('likes owner').then(post => {
+        return Posts.findById(args.postId).populate('likes owner').then(post => {
             if (post) {
                 let currentUserId = context.user._id;
                 let likeIndex = post.likes.findIndex(user => user['_id'].equals(currentUserId))
@@ -63,7 +67,7 @@ const resolver = {
         })
     },
     deletePostLike: async (args, context) => {
-        return Posts.findById(new ObjectId(args.postId)).populate('likes')
+        return Posts.findById(args.postId).populate('likes owner')
             .then(post => {
                 let currentUserId = context.user._id;
                 if (post) {

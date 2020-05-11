@@ -3,20 +3,32 @@ import gql from 'graphql-tag';
 export const LIKE = gql`
    mutation AddPostLike($id: String!) {
      addPostLike(postId: $id) {
-     id
-      likes {
-      id
-      }
+           id
+       title
+       body
+         imageUrl
+        owner {
+            id
+            }
+       likes{
+           id
+       }
     }
   }
 `;
 export const DIS_LIKE = gql`
    mutation DeletePostLike($id: String!) {
      deletePostLike(postId: $id) {
-     id
-      likes {
-      id
-      }
+       id
+       title
+       body
+       imageUrl
+        owner {
+            id
+            }
+       likes{
+           id
+       }
     }
   }
 `;
@@ -26,6 +38,7 @@ export const DELETE_POST = gql`
        id
        title
        body
+         imageUrl
         owner {
             id
             }
@@ -36,7 +49,7 @@ export const DELETE_POST = gql`
     }
     }
     `;
-export const CREATE_POST= gql`
+export const CREATE_POST = gql`
 mutation CreatePost($title: String!,$body: String!, $image:FileUpload!) {
        createPost(title:$title,body:$body,image:$image) {
             id
@@ -61,6 +74,7 @@ export const UPDATE_POST = gql`
        id
        title
        body
+       imageUrl
        likes {
         id
        }

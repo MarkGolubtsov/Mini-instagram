@@ -16,6 +16,7 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {createUploadLink} from "apollo-upload-client";
 import Editor from "./component/posts/editor/EditorContainer";
 import Profile from "./component/profile/Profile";
+import LikedPost from "./component/posts/LikedPost";
 
 const httpLink = createUploadLink({
     uri: endpoints.graphql,
@@ -51,6 +52,7 @@ class App extends React.Component {
                         <PrivateRoute exact path={Routes.editor} component={Editor}/>
                         <PrivateRoute exact path={Routes.posts} component={Posts}/>
                         <PrivateRoute exact path={Routes.profile} component={Profile}/>
+                        <PrivateRoute exact path={Routes.liked} component={LikedPost}/>
                         <Redirect to={Routes.posts}/>
                     </Switch>
                 </BrowserRouter>

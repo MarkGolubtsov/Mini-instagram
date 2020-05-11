@@ -35,6 +35,23 @@ export const GET_MY_POSTS = gql`
     }
 
 `
+export const GET_LIKED_POSTS = gql`
+    query {
+        likedPosts {
+            id
+            title
+            body
+            imageUrl
+            owner {
+            id
+            }
+            likes {
+                id
+            }
+        }
+    }
+
+`
 
 export const GET_USER_POSTS = gql`
     query getUserPost($id:String!) {

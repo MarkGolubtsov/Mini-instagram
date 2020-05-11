@@ -27,14 +27,12 @@ const Post = (props) => {
         const data = client.readQuery({
             query: GET_MY_POSTS,
         });
-        console.log(data);
-        console.log(item);
-        const newData = {
-            myPosts: data.myPosts.filter(t => t.id !== item.id)
-        }
+
+        const myPosts = data.myPosts.filter(t => t.id !== item.id)
+
         client.writeQuery({
             query: GET_MY_POSTS,
-            data: {...data,...newData}
+            data: {...data, myPosts}
         });
     }
 
@@ -68,7 +66,7 @@ const Post = (props) => {
     let isPostHasLikesFromCurrentUser = post.likes.findIndex(user => user.id === authContext.currentUser.id) > -1;
     return (
         <Box m={1}>
-            <Card >
+            <Card>
                 <CardActionArea>
                     <CardMedia
                         height='50%'
@@ -100,16 +98,16 @@ const Post = (props) => {
                         {post.likes.length}
                     </Typography>
                     {authContext.currentUser.id === post.owner.id
-                    ?
-                    <React.Fragment>
-                        <IconButton color='secondary' onClick={remove} aria-label="delete">
-                            <DeleteIcon fontSize="large"/>
-                        </IconButton>
-                        <IconButton color='primary' onClick={onEdit} aria-label="edit">
-                            <EditIcon fontSize="large"/>
-                        </IconButton>
-                    </React.Fragment>
-                    : <React.Fragment/>
+                        ?
+                        <React.Fragment>
+                            <IconButton color='secondary' onClick={remove} aria-label="delete">
+                                <DeleteIcon fontSize="large"/>
+                            </IconButton>
+                            <IconButton color='primary' onClick={onEdit} aria-label="edit">
+                                <EditIcon fontSize="large"/>
+                            </IconButton>
+                        </React.Fragment>
+                        : <React.Fragment/>
                     }
                 </CardActions>
             </Card>

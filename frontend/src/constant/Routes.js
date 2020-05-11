@@ -3,5 +3,6 @@ export const Routes = {
     editor: '/post/:id?/editor',
     login: '/login',
     profile:'/profile',
-    registration: '/registration'
+    registration: '/registration',
+    liked: '/posts/liked',
 };

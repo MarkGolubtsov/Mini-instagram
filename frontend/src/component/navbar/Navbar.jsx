@@ -23,6 +23,7 @@ class Navbar extends React.Component {
     logout = () => this.context.logout();
 
     profile = () => this.props.history.push(Routes.profile);
+    likedPosts = () => this.props.history.push(Routes.liked);
 
     render() {
         return (
@@ -39,7 +40,7 @@ class Navbar extends React.Component {
                             <IconButton onClick={this.create}>
                                 <AddBoxIcon/>
                             </IconButton>
-                            <IconButton>
+                            <IconButton onClick={this.likedPosts}>
                                 <FavoriteIcon/>
                             </IconButton>
                             <IconButton onClick={this.logout}>
@@ -47,7 +48,7 @@ class Navbar extends React.Component {
                                 </ExitToApp>
                             </IconButton>
                             <Typography>
-                                Hi,{this.context.currentUser.name}!
+                                Hi,{this.context.currentUser.email}!
                             </Typography>
                         </>
                         :
